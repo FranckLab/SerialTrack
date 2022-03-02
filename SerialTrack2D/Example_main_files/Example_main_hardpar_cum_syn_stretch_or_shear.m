@@ -5,7 +5,7 @@
 % Particle rigidity:    hard 
 % Tracking mode:        cumulative
 % Syn or Exp:           syn
-% Deformation mode:     uniaxial stretch
+% Deformation mode:     uniaxial stretch or simple shear
 %
 % ===================================================
 % Author: Jin Yang, Ph.D.
@@ -13,7 +13,7 @@
 % Date: 02/2022
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Initialization
+%% Initialization 
 close all; clear all; clc; clearvars -global
 disp('************************************************');
 disp('*** Welcome to SerialTrack Particle Tracking ***');

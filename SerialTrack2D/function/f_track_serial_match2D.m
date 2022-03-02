@@ -313,7 +313,7 @@ while iterNum < maxIterNum
         
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('%%%%%% Neighbor topology tracking: Done! %%%%%%'); 
+disp('%%%%%% SerialTrack: Done! %%%%%%'); 
 timeCost = toc; toc
 fprintf('\n'); 
 

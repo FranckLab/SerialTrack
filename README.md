@@ -12,7 +12,7 @@ This repositry contains the Matlab m-files to run our SerialTrack particle track
 * [Cite](https://github.com/FranckLab/SerialTrack#cite)
 * [Franck Lab](https://www.franck.engr.wisc.edu/)
  
-## Running 3D-VTFM
+## Install and execute SerialTrack
 
 ### Code installation
 To run SerialTrack, please download MATLAB version later than 2021a and install these code packages/toolboxes:

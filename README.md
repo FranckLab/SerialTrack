@@ -1,6 +1,6 @@
 # SerialTrack MATLAB code package
 
-### ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking    
+### SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking    
 
  
 This repositry contains the Matlab m-files to run our SerialTrack particle tracking algorithm. This code package includes both 2D and 3D particle trackings to track their full-field 2D and 3D displacement fields, respectively. More details can be found in our SerialTrack paper (***Link to be updated***).

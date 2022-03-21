@@ -7,7 +7,7 @@ This repositry contains the Matlab m-files to run our SerialTrack particle track
   
 ### Important pages
 * [Download latest version v1.0!](https://github.com/FranckLab/SerialTrack/releases)
-* [Example data] https://uwmadison.box.com/s/vohfmyoho82zymjiiwkyaqhpfwlv4hmr (***Datasets link to be updated***)
+* [Example data] (https://minds.wisconsin.edu/handle/1793/82901) 
 * [FAQ](https://github.com/FranckLab/SerialTrack#faq)
 * [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues)
 * [Bug Fixes/history](https://github.com/FranckLab/SerialTrack/wiki/Bug-Fixes!)
@@ -21,6 +21,9 @@ To run SerialTrack, please download MATLAB version later than 2021a and install 
 * Parallel computing toolbox
 * Wavelets analysis toolbox
 * Image processing toolbox
+* Partial differential equation toolbox
+* Curve fitting toolbox
+* Statistics and Machine Learning Toolbox
 
 ### Input Image Requirements
 * 2D image sequences (at least two frames)
@@ -28,7 +31,7 @@ To run SerialTrack, please download MATLAB version later than 2021a and install 
 
 ### Running included example case
 1. Make sure that the main files and the supplemental m files (from file exchange) are added to the path in Matlab.
-2. Download and save the [example data sets](***Datasets link to be updated***) in the "./imgFolder" folder. 
+2. Download and save the [example data sets] in the "./imgFolder" folder. 
 3. Run the example*.m files in the folder "./Example_main_files"
    
 

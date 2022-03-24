@@ -3,7 +3,7 @@
 ### SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking    
 
  
-This repositry contains the Matlab m-files to run our SerialTrack particle tracking algorithm. This code package includes both 2D and 3D particle trackings to track their full-field 2D and 3D displacement fields, respectively. More details can be found in our SerialTrack paper (***Link to be updated***).
+This repositry contains the Matlab m-files to run our SerialTrack particle tracking algorithm. This code package includes both 2D and 3D particle trackings to track their full-field 2D and 3D displacement fields, respectively. More details can be found in our SerialTrack paper (https://doi.org/10.48550/arXiv.2203.12573).
   
 ### Important pages
 * [Download latest version v1.0!](https://github.com/FranckLab/SerialTrack/releases)
@@ -37,14 +37,9 @@ To run SerialTrack, please download MATLAB version later than 2021a and install 
 
 ## Cite
 If used please cite:
-[](*** Paper link to be updated ***)
-
-```bibtex
-@article{ 
-}
-}
-```
-
+[1] Jin Yang, Yue Yin, Alexander K. Landauer, Selda Buyuktozturk, Jing Zhang, Luke Summey, Alexander McGhee, Matt K. Fu, John O. Dabiri, Christian Franck. SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking. (2022) https://doi.org/10.48550/arXiv.2203.12573
+ 
+ 
 ## Contact and support
 For questions, please first refer to [FAQ](https://github.com/FranckLab/SerialTrack#faq) and [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues). Add a new question if similar issue hasn't been reported. We shall help you at the earliest. The author's contact information can be found at [Franck Lab](https://www.franck.engr.wisc.edu/).
 

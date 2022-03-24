@@ -96,9 +96,9 @@ for tempi=1:3, parCoordA( parCoordA(:,tempi)>size(Img{ImgSeqNum},tempi), : ) = [
 for tempi=1:3, parCoordA( parCoordA(:,tempi)<1, : ) = []; end
  
 %%%%% Plot %%%%%
-% figure, plot3(parCoordA(:,1),parCoordA(:,2),parCoordA(:,3),'bo');
-% view(3); box on; axis equal; axis tight; set(gca,'fontsize',18); 
-% title('Detected particles in ref image','fontweight','normal');
+figure, plot3(parCoordA(:,1),parCoordA(:,2),parCoordA(:,3),'bo');
+view(3); box on; axis equal; axis tight; set(gca,'fontsize',18); 
+title('Detected particles in ref image','fontweight','normal');
  
 %%%%% Report detected beads # %%%%%
 disp(['Detected particle # in ref image: ',num2str(size(parCoordA,1))]);
@@ -170,7 +170,8 @@ axis([2,length(file_name),0,1]);
 %%%%% Save results %%%%%
 disp('%%%%%% SerialTrack 3D hard particle tracking: Done! %%%%%%'); fprintf('\n');
 results_file_name = 'results_3D_hardpar.mat';
-save(results_file_name,'parCoord_prev','uvw_B2A_prev','track_A2B_prev','track_B2A_prev');
+mkdir results
+save(['./results/' results_file_name],'parCoord_prev','uvw_B2A_prev','track_A2B_prev','track_B2A_prev');
  
 
 

@@ -170,7 +170,8 @@ axis([2,length(file_name),0,1]);
 %%%%% Save results %%%%%
 disp('%%%%%% SerialTrack 3D hard particle tracking: Done! %%%%%%'); fprintf('\n');
 results_file_name = 'results_3D_hardpar.mat';
-save(results_file_name,'parCoord_prev','uvw_B2A_prev','resultDisp','resultDefGrad','track_A2B_prev');
+mkdir results
+save(['./results/' results_file_name],'parCoord_prev','uvw_B2A_prev','resultDisp','resultDefGrad','track_A2B_prev');
  
 
 

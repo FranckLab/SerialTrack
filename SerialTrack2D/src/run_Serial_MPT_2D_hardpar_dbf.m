@@ -242,7 +242,8 @@ axis([2,length(file_name)/2,0,1]);
 %%%%% Save results %%%%%
 disp('%%%%%% ALTPT hard particle tracking: Done! %%%%%%'); fprintf('\n');
 results_file_name = 'results_hardpar.mat';
-save(results_file_name,'parCoord_prev','uv_B2A_prev','track_A2B_prev','track_B2A_prev');
+mkdir results
+save(['./results/' results_file_name],'parCoord_prev','uv_B2A_prev','track_A2B_prev','track_B2A_prev');
  
 
 

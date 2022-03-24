@@ -205,7 +205,8 @@ axis([2,length(Img),0,1]);
 %%%%% Save results %%%%%
 disp('%%%%%% ALTPT soft particle tracking: Done! %%%%%%');  
 results_file_name = 'results_2D_softpar.mat';
-save(results_file_name,'xyGrid_prev','uvGrid_B2A_prev','track_A2B_prev','parCoord_prev');
+mkdir results
+save(['./results/' results_file_name],'xyGrid_prev','uvGrid_B2A_prev','track_A2B_prev','parCoord_prev');
  
 
 

@@ -27,7 +27,45 @@
 
 %% 
 %%%%% Load 2D images %%%%%
-[file_name,Img,MPTPara_temp] = funReadImage2; close all;
+% [file_name,Img,MPTPara_temp] = funReadImage2; close all;
+
+% ==============================================
+imgfoldername = '.\imgFolder\img_syn_hardpar\img_rot_hardpar_sd2';
+addpath([imgfoldername,'\']);
+img1 = dir(fullfile(imgfoldername,'*.jpg'));
+img2 = dir(fullfile(imgfoldername,'*.jpeg'));
+img3 = dir(fullfile(imgfoldername,'*.tif'));
+img4 = dir(fullfile(imgfoldername,'*.tiff'));
+img5 = dir(fullfile(imgfoldername,'*.bmp'));
+img6 = dir(fullfile(imgfoldername,'*.png'));
+img7 = dir(fullfile(imgfoldername,'*.jp2'));
+file_name = [img1;img2;img3;img4;img5;img6;img7];
+file_name = struct2cell(file_name);
+
+% ==============================================
+% The following codes only consider two images comparasion
+numImages = size(file_name,2);
+for i = 1:numImages
+    Img{i} = imread(file_name{1,i});
+    % Change color RGB images to grayscale images
+    [~, ~, numberOfColorChannels] = size(Img{i});
+    if (numberOfColorChannels==3)
+        Img{i} = rgb2gray(Img{i});
+    end
+    Img{i} = double(Img{i})';
+end
+
+gridx = [1, size(Img{1},1)];
+gridy = [1, size(Img{1},2)];
+gridxy.gridx = round(gridx); gridxy.gridy = round(gridy);
+
+% ============================================== Store TPTpara
+MPTPara_temp.gridxyROIRange = gridxy;
+MPTPara_temp.LoadImgMethod = 1;
+MPTPara_temp.ImgSize = size(Img{1});
+ 
+
+% ==============================================
 disp('%%%%%% Load images: Done! %%%%%%'); fprintf('\n');
 
 %%%%% Update MPTPara %%%%%
@@ -341,51 +379,51 @@ axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ..
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('Press "Ctrl + C" and modify codes below to plot interpolated displacements and strains on a uniform grid mesh');
-pause; 
-
-ImgSeqNum = 2; % TODO: Frame #
-
-
-%%%%% Previously tracked displacement field %%%%%
-resultDispCurr = resultDisp{ImgSeqNum-1};
-resultDefGradCurr = resultDefGrad{ImgSeqNum-1};
-disp_A2B_parCoordB = resultDispCurr.disp_A2B_parCoordB;
-parCoordB = resultDispCurr.parCoordB;
-  
-%%%%% Interpolate scatterred data to gridded data %%%%%
-sxy = min([round(0.5*MPTPara.f_o_s),20])*[1,1]; % Step size for griddata
-smoothness = 1e-3; % Smoothness for regularization; "smoothness=0" means no regularization
-
-[x_Grid_refB,y_Grid_refB,u_Grid_refB]=funScatter2Grid2D(parCoordB(:,1),parCoordB(:,2),disp_A2B_parCoordB(:,1),sxy,smoothness);
-[~,~,v_Grid_refB]=funScatter2Grid2D(parCoordB(:,1),parCoordB(:,2),disp_A2B_parCoordB(:,2),sxy,smoothness);
-
-% Apply ROI image mask
-[u_Grid_refB, v_Grid_refB] = funRmROIOutside(x_Grid_refB,y_Grid_refB,MPTPara.ImgRefMask,u_Grid_refB,v_Grid_refB);
-% Build a displacement vector
-uv_Grid_refB_Vector=[u_Grid_refB(:),v_Grid_refB(:)]'; uv_Grid_refB_Vector=uv_Grid_refB_Vector(:);
-% Calculate deformation gradient
-D_Grid = funDerivativeOp(size(x_Grid_refB,1),size(x_Grid_refB,2),mean(sxy)); % Central finite difference operator
-F_Grid_refB_Vector=D_Grid*uv_Grid_refB_Vector; % {F}={D}{U}
-
-
-%%%%% Cone plot grid data: displecement %%%%%
-figure, plotCone2(x_Grid_refB*xstep,y_Grid_refB*xstep,u_Grid_refB*xstep,v_Grid_refB*xstep );
-set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-title('Tracked incremental displacement','fontweight','normal');
-axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ...
-      MPTPara.gridxyROIRange.gridy(1), MPTPara.gridxyROIRange.gridy(2) ]);
-  
-
-%%%%% Generate an FE-mesh %%%%%
-[coordinatesFEM_refB,elementsFEM_refB] = funMeshSetUp(x_Grid_refB*xstep,y_Grid_refB*xstep);
-
-%%%%% Cone plot grid data: displacement %%%%%
-Plotdisp_show(uv_Grid_refB_Vector*xstep, coordinatesFEM_refB*xstep, elementsFEM_refB,[],'NoEdgeColor');
- 
-%%%%% Cone plot grid data: infinitesimal strain %%%%%
-Plotstrain_show(F_Grid_refB_Vector, coordinatesFEM_refB*xstep, elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
- 
+% disp('Press "Ctrl + C" and modify codes below to plot interpolated displacements and strains on a uniform grid mesh');
+%  
+% 
+% ImgSeqNum = 2; % TODO: Frame #
+% 
+% 
+% %%%%% Previously tracked displacement field %%%%%
+% resultDispCurr = resultDisp{ImgSeqNum-1};
+% resultDefGradCurr = resultDefGrad{ImgSeqNum-1};
+% disp_A2B_parCoordB = resultDispCurr.disp_A2B_parCoordB;
+% parCoordB = resultDispCurr.parCoordB;
+%   
+% %%%%% Interpolate scatterred data to gridded data %%%%%
+% sxy = min([round(0.5*MPTPara.f_o_s),20])*[1,1]; % Step size for griddata
+% smoothness = 1e-3; % Smoothness for regularization; "smoothness=0" means no regularization
+% 
+% [x_Grid_refB,y_Grid_refB,u_Grid_refB]=funScatter2Grid2D(parCoordB(:,1),parCoordB(:,2),disp_A2B_parCoordB(:,1),sxy,smoothness);
+% [~,~,v_Grid_refB]=funScatter2Grid2D(parCoordB(:,1),parCoordB(:,2),disp_A2B_parCoordB(:,2),sxy,smoothness);
+% 
+% % Apply ROI image mask
+% [u_Grid_refB, v_Grid_refB] = funRmROIOutside(x_Grid_refB,y_Grid_refB,MPTPara.ImgRefMask,u_Grid_refB,v_Grid_refB);
+% % Build a displacement vector
+% uv_Grid_refB_Vector=[u_Grid_refB(:),v_Grid_refB(:)]'; uv_Grid_refB_Vector=uv_Grid_refB_Vector(:);
+% % Calculate deformation gradient
+% D_Grid = funDerivativeOp(size(x_Grid_refB,1),size(x_Grid_refB,2),mean(sxy)); % Central finite difference operator
+% F_Grid_refB_Vector=D_Grid*uv_Grid_refB_Vector; % {F}={D}{U}
+% 
+% 
+% %%%%% Cone plot grid data: displecement %%%%%
+% figure, plotCone2(x_Grid_refB*xstep,y_Grid_refB*xstep,u_Grid_refB*xstep,v_Grid_refB*xstep );
+% set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
+% title('Tracked incremental displacement','fontweight','normal');
+% axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ...
+%       MPTPara.gridxyROIRange.gridy(1), MPTPara.gridxyROIRange.gridy(2) ]);
+%   
+% 
+% %%%%% Generate an FE-mesh %%%%%
+% [coordinatesFEM_refB,elementsFEM_refB] = funMeshSetUp(x_Grid_refB*xstep,y_Grid_refB*xstep);
+% 
+% %%%%% Cone plot grid data: displacement %%%%%
+% Plotdisp_show(uv_Grid_refB_Vector*xstep, coordinatesFEM_refB*xstep, elementsFEM_refB,[],'NoEdgeColor');
+%  
+% %%%%% Cone plot grid data: infinitesimal strain %%%%%
+% Plotstrain_show(F_Grid_refB_Vector, coordinatesFEM_refB*xstep, elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
+%  
 
  
 

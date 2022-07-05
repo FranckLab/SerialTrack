@@ -323,6 +323,7 @@ axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ..
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp('Press "Ctrl + C" and modify codes below to plot interpolated displacements and strains on a uniform grid mesh');
+disp(['Press "Enter" key to keep running the code']);
 pause;
 
 ImgSeqNum = 4; % Frame #

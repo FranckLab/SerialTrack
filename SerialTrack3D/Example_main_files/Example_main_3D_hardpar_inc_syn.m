@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+./%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SerialTrack execute main file
 % ===================================================
 % Dimension:            3D
@@ -50,8 +50,8 @@ SerialTrackPath = 'D:\MATLAB\SerialTrack3D'; % TODO: modify the path
 % fileFolder = '';
 
 %%%%% Synthetic cases %%%%%
-DefType = 'stretch';        % {'translation','stretch','simpleshear','rotation'}
-SeedingDensityType = 2;     % {1,2,3,4} % particle seeding density
+DefType = 'stretch';        % Loading type: {'translation','stretch','simpleshear','rotation'}
+SeedingDensityType = 2;     % Particle seeding density: {1,2,3,4} --> {10,100,300,1000}*1e-6 particles per voxel 
 fileNameAll = 'vol_*.mat';  % file name(s)
 % ----- file folder name -----
 if strcmp(DefType,'translation')==1

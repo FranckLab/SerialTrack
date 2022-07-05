@@ -10,7 +10,7 @@
 clear; close all; % clc
 
 DefType = 'stretch';
-seedingDensity = 300*1e-6; % {10,100,1000,300}*1e-6; 
+seedingDensity = 300*1e-6; % {10,100,300,1000}*1e-6; 
 
 %% Mohak's code to generate a synthetic volumetic image
  

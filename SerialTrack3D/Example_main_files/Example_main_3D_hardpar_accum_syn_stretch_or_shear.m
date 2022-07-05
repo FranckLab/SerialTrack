@@ -3,9 +3,9 @@
 % ===================================================
 % Dimension:            3D
 % Particle rigidity:    hard 
-% Tracking mode:        incremental
-% Syn or Exp:           exp
-% Deformation mode:     hydrogel indentation
+% Tracking mode:        accumulative
+% Syn or Exp:           syn
+% Deformation mode:     uniaxial stretch or simple shear
 %
 % ===================================================
 % Author: Jin Yang, Ph.D.
@@ -18,21 +18,19 @@ close all; clear all; clc; clearvars -global
 disp('************************************************');
 disp('*** Welcome to SerialTrack Particle Tracking ***');
 disp('************************************************');
-addpath( './function/','./src/','./Scatter2Grid3D' );  
+addpath( './function/','./src/','./Scatter2Grid3D' ); 
 
  
 %% user defined parameters %%%%%
 
 %%%%% Problem dimension and units %%%%%
-MPTPara.DIM = 3;      % problem dimension
-MPTPara.xstep = 0.4;  % unit: um/px
-MPTPara.ystep = 0.4;  % unit: um/px
-MPTPara.zstep = 0.4;  % unit: um/px
-MPTPara.tstep = 1;    % unit: us
+MPTPara.DIM = 3;   % problem dimension
+MPTPara.xstep = 1; % unit: um/px
+MPTPara.tstep = 1; % unit: us
 
 %%%%% Code mode %%%%%
-MPTPara.mode = 'inc'; % {'inc': incremental mode; 
-                      %  'accum': accumulative mode}
+MPTPara.mode = 'accum'; % {'inc': incremental mode; 
+                        %  'accum': accumulative mode}
 
 %%%%% Particle rigidity %%%%%
 MPTPara.parType = 'hard'; % {'hard': hard particle; 
@@ -45,27 +43,41 @@ disp(['Particle type: ',MPTPara.parType]);
 disp('************************************************'); fprintf('\n');
 
 %%%%% SerialTrack path %%%%%
-SerialTrackPath = 'D:\MATLAB\SerialTrack-main\SerialTrack3D'; % TODO: modify the path
+SerialTrackPath = 'D:\MATLAB\SerialTrack3D'; % TODO: modify the path
 
 %%%%% Volumetric image path %%%%%
-fileNameAll = 'vol_hydrogel_ind_20190504_cut_0*.mat';
-fileFolder = './imgFolder/img_hydrogel_indentation/';
-  
+% fileNameAll = '20190504*.mat';
+% fileFolder = '';
+
+%%%%% Synthetic cases %%%%%
+DefType = 'simpleshear';    % {'translation','stretch','simpleshear','rotation'}
+SeedingDensityType = 2;     % {1,2,3,4}
+fileNameAll = 'vol_*.mat';  % file name(s)
+% ----- file folder name -----
+if strcmp(DefType,'translation')==1
+    fileFolder = ['./imgFolder/img_syn_hardpar/img_trans_hardpar_sd',num2str(SeedingDensityType)];
+elseif strcmp(DefType,'rotation')==1
+    fileFolder = ['./imgFolder/img_syn_hardpar/img_rot_hardpar_sd',num2str(SeedingDensityType)];
+elseif strcmp(DefType,'stretch')==1
+    fileFolder = ['./imgFolder/img_syn_hardpar/img_str_hardpar_sd',num2str(SeedingDensityType)];
+elseif strcmp(DefType,'simpleshear')==1
+    fileFolder = ['./imgFolder/img_syn_hardpar/img_simshear_hardpar_sd',num2str(SeedingDensityType)];
+else
+end
 
 %%%%% Bead detection method %%%%%
-BeadPara.detectionMethod = 2;  % {1-TPT code; 2-regionprops}
-
-
+BeadPara.detectionMethod = 1;  % {1-TPT code; 2-regionprops}
+ 
 %%%%% Image binary mask file %%%%%
-im_roi_mask_file_path = ''; % TODO: leave it as empty if there is no mask file
+im_roi_mask_file_path = '';
 
 
 %%%%% Particle detection parameters %%%%%
 %%%%% Bead Parameter %%%%%
-BeadPara.thres = 0.1;           % Threshold for detecting particles
+BeadPara.thres = 0.5;           % Threshold for detecting particles
 BeadPara.beadSize = 3;          % Estimated radius of a single particle
-BeadPara.minSize = 3;           % Minimum radius of a single particle
-BeadPara.maxSize = 20;          % Maximum radius of a single particle
+BeadPara.minSize = 4;           % Minimum radius of a single particle
+BeadPara.maxSize = 100;         % Maximum radius of a single particle
 BeadPara.winSize = [5,5,5];     % By default
 BeadPara.dccd = [1,1,1];        % By default
 BeadPara.abc = [1,1,1];         % By default
@@ -89,7 +101,7 @@ MPTPara.maxIterNum = 20;         % Max ADMM iteration number
 MPTPara.iterStopThres = 1e-3;    % ADMM iteration stopping threshold
 MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge
-MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;  
+MPTPara.usePrevResults = 1;      % Whether use previous results or not: 0-no; 1-yes;  
 
 
 %%%% Postprocessing: merge trajectory segments %%%%%
@@ -106,6 +118,8 @@ if strcmp(MPTPara.mode,'inc')==1
 elseif strcmp(MPTPara.mode,'accum')==1
     run_Serial_MPT_3D_hardpar_accum;    
 end
+
+ 
 
 
 

@@ -468,43 +468,43 @@ axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.grid
       zstep*MPTPara.gridxyzROIRange.gridz(1), zstep*MPTPara.gridxyzROIRange.gridz(2)]);
 
   
-%% %%%%% Compute cumulative tracking ratio from emerged trajectories %%%%%
+%% %%%%% Compute accumulative tracking ratio from emerged trajectories %%%%%
  
-disp('%%%%% Plot tracked cumulative displacements %%%%%'); fprintf('\n');
+disp('%%%%% Plot tracked accumulative displacements %%%%%'); fprintf('\n');
 parCoordTrajMat = cell2mat( parCoordTraj );
 
 [row1,col1] = find(isnan(parCoordTrajMat(1:length(file_name):end,1))==0);
-trackParCum_ind = row1;
-trackParCum_track_ratio = [];
+trackParaccum_ind = row1;
+trackParaccum_track_ratio = [];
 
 for ImgSeqNum = 2:length(file_name)
     [row2,col2] = find(isnan(parCoordTrajMat(ImgSeqNum:length(file_name):end,1))==0);
-    trackParCum_ind = intersect(row2,trackParCum_ind);
-    trackParCum_track_ratio(ImgSeqNum-1) = length(trackParCum_ind) / size(parCoord_prev{1},1);
+    trackParaccum_ind = intersect(row2,trackParaccum_ind);
+    trackParaccum_track_ratio(ImgSeqNum-1) = length(trackParaccum_ind) / size(parCoord_prev{1},1);
 end
 
 defList = [2:1:length(file_name)];
-fig=figure; ax=axes; hold on; plot(defList,trackParCum_track_ratio,'bs--','linewidth',1);
+fig=figure; ax=axes; hold on; plot(defList,trackParaccum_track_ratio,'bs--','linewidth',1);
 adjust_fig(fig,ax,'','',''); box on; title('');
 xlabel('Image #'); ylabel('Tracking ratio');
 try axis([2,length(file_name),0,1]); catch; end
 
-%%%%% Plot tracked cumulative displacement field %%%%%
+%%%%% Plot tracked accumulative displacement field %%%%%
 %%%%% Make a video %%%%%
-v = VideoWriter('video_3D_inc_cum.avi'); v.FrameRate = 5; open(v); figure,
+v = VideoWriter('video_3D_inc_accum.avi'); v.FrameRate = 5; open(v); figure,
 for ImgSeqNum = 2:length(file_name)
     
     parCoordA = parCoordTrajMat(1:length(file_name):end,1:3);
     parCoordB = parCoordTrajMat(ImgSeqNum:length(file_name):end,1:3);
-    parCoordACum = parCoordA(trackParCum_ind,:);
-    parCoordBCum = parCoordB(trackParCum_ind,:);
-    disp_A2BCum = parCoordBCum - parCoordACum;
+    parCoordAaccum = parCoordA(trackParaccum_ind,:);
+    parCoordBaccum = parCoordB(trackParaccum_ind,:);
+    disp_A2Baccum = parCoordBaccum - parCoordAaccum;
     
     % ----- Cone plot grid data: displecement -----
-    clf; plotCone3(xstep*parCoordBCum(:,1),ystep*parCoordBCum(:,2),zstep*parCoordBCum(:,3), ...
-                   xstep*disp_A2BCum(:,1),ystep*disp_A2BCum(:,2),zstep*disp_A2BCum(:,3));
+    clf; plotCone3(xstep*parCoordBaccum(:,1),ystep*parCoordBaccum(:,2),zstep*parCoordBaccum(:,3), ...
+                   xstep*disp_A2Baccum(:,1),ystep*disp_A2Baccum(:,2),zstep*disp_A2Baccum(:,3));
     set(gca,'fontsize',18); view(3); box on; axis equal; axis tight; 
-    title(['Tracked cumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    title(['Tracked accumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y'); zlabel('z');
     axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
           ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
@@ -532,15 +532,15 @@ ImgSeqNum = 2; % TODO: assign a Frame #
 
 %%%%% Previously tracked displacement field %%%%%
 if size(parCoord_prev,1) == 1 % if there are just two frames
-    parCoordBCum = parCoordB;
-    parCoordACum = parCoordB - disp_A2B_parCoordB;
-    disp_A2BCum = parCoordBCum - parCoordACum; 
+    parCoordBaccum = parCoordB;
+    parCoordAaccum = parCoordB - disp_A2B_parCoordB;
+    disp_A2Baccum = parCoordBaccum - parCoordAaccum; 
 else % for multiple frames
     parCoordA = parCoordTrajMat(1:length(file_name):end,1:3);
     parCoordB = parCoordTrajMat(ImgSeqNum:length(file_name):end,1:3);
-    parCoordACum = parCoordA(trackParCum_ind,1:3);
-    parCoordBCum = parCoordB(trackParCum_ind,1:3);
-    disp_A2BCum = parCoordBCum - parCoordACum;
+    parCoordAaccum = parCoordA(trackParaccum_ind,1:3);
+    parCoordBaccum = parCoordB(trackParaccum_ind,1:3);
+    disp_A2Baccum = parCoordBaccum - parCoordAaccum;
 end
 
 %%%%% Interpolate scatterred data to gridded data %%%%%
@@ -548,9 +548,9 @@ addpath('./Scatter2Grid3D/'); % MATLAB Exchange File (see Ref[5])
 sxyz = min([round(0.5*MPTPara.f_o_s),20])*[1,1,1]; % Step size for griddata
 smoothness = 1e-3; % Smoothness for regularization; "smoothness=0" means no regularization
 
-[x_Grid_refB,y_Grid_refB,z_Grid_refB,u_Grid_refB]=funScatter2Grid3D(parCoordBCum(:,1),parCoordBCum(:,2),parCoordBCum(:,3),disp_A2BCum(:,1),sxyz,smoothness);
-[~,~,~,v_Grid_refB]=funScatter2Grid3D(parCoordBCum(:,1),parCoordBCum(:,2),parCoordBCum(:,3),disp_A2BCum(:,2),sxyz,smoothness);
-[~,~,~,w_Grid_refB]=funScatter2Grid3D(parCoordBCum(:,1),parCoordBCum(:,2),parCoordBCum(:,3),disp_A2BCum(:,3),sxyz,smoothness);
+[x_Grid_refB,y_Grid_refB,z_Grid_refB,u_Grid_refB]=funScatter2Grid3D(parCoordBaccum(:,1),parCoordBaccum(:,2),parCoordBaccum(:,3),disp_A2Baccum(:,1),sxyz,smoothness);
+[~,~,~,v_Grid_refB]=funScatter2Grid3D(parCoordBaccum(:,1),parCoordBaccum(:,2),parCoordBaccum(:,3),disp_A2Baccum(:,2),sxyz,smoothness);
+[~,~,~,w_Grid_refB]=funScatter2Grid3D(parCoordBaccum(:,1),parCoordBaccum(:,2),parCoordBaccum(:,3),disp_A2Baccum(:,3),sxyz,smoothness);
 
 % Apply ROI image mask %% TODO
 % [u_Grid_refB, v_Grid_refB] = funRmROIOutside(x_Grid_refB,y_Grid_refB,MPTPara.ImgRefMask,u_Grid_refB,v_Grid_refB);
@@ -580,7 +580,7 @@ F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 %%%%% Cone plot grid data: displecement %%%%%
 figure, plotCone3(x_Grid_refB*xstep,y_Grid_refB*ystep,z_Grid_refB*zstep,u_Grid_refB*xstep,v_Grid_refB*ystep,w_Grid_refB*zstep );
 set(gca,'fontsize',18); view(3); box on; axis equal; axis tight;  
-title('Tracked cumulative displacement','fontweight','normal');
+title('Tracked accumulative displacement','fontweight','normal');
 axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
       ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
       zstep*MPTPara.gridxyzROIRange.gridz(1), zstep*MPTPara.gridxyzROIRange.gridz(2)]);

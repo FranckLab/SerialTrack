@@ -30,7 +30,7 @@ MPTPara.tstep = 1;  % unit: us
 
 %%%%% Code mode %%%%%
 MPTPara.mode = 'inc'; % {'inc': incremental mode; 
-                      %  'cum': cumulative mode}
+                      %  'accum': accumulative mode}
 
 %%%%% Particle rigidity %%%%%
 MPTPara.parType = 'hard'; % {'hard': hard particle; 
@@ -115,8 +115,8 @@ maxGapTrajSeqLength = 0;    % the max frame# gap between connected trajectory se
 %%%%% Execute SerialTrack particle tracking %%%%%
 if strcmp(MPTPara.mode,'inc')==1
     run_Serial_MPT_3D_hardpar_inc;
-elseif strcmp(MPTPara.mode,'cum')==1
-    run_Serial_MPT_3D_hardpar_cum;    
+elseif strcmp(MPTPara.mode,'accum')==1
+    run_Serial_MPT_3D_hardpar_accum;    
 end
  
 

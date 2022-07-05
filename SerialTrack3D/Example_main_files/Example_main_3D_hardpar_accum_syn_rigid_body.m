@@ -3,9 +3,9 @@
 % ===================================================
 % Dimension:            3D
 % Particle rigidity:    hard 
-% Tracking mode:        incremental
-% Syn or Exp:           exp
-% Deformation mode:     hydrogel indentation
+% Tracking mode:        accumulative
+% Syn or Exp:           syn
+% Deformation mode:     rigid body motions including translations & rotations
 %
 % ===================================================
 % Author: Jin Yang, Ph.D.
@@ -18,20 +18,18 @@ close all; clear all; clc; clearvars -global
 disp('************************************************');
 disp('*** Welcome to SerialTrack Particle Tracking ***');
 disp('************************************************');
-addpath( './function/','./src/','./Scatter2Grid3D' );  
+addpath( './function/','./src/','./Scatter2Grid3D/' ); 
 
  
 %% user defined parameters %%%%%
 
 %%%%% Problem dimension and units %%%%%
-MPTPara.DIM = 3;      % problem dimension
-MPTPara.xstep = 0.4;  % unit: um/px
-MPTPara.ystep = 0.4;  % unit: um/px
-MPTPara.zstep = 0.4;  % unit: um/px
-MPTPara.tstep = 1;    % unit: us
+MPTPara.DIM = 3;   % problem dimension
+MPTPara.xstep = 1; % unit: um/px or voxel
+MPTPara.tstep = 1; % unit: us or frame
 
 %%%%% Code mode %%%%%
-MPTPara.mode = 'inc'; % {'inc': incremental mode; 
+MPTPara.mode = 'accum'; % {'inc': incremental mode; 
                       %  'accum': accumulative mode}
 
 %%%%% Particle rigidity %%%%%
@@ -48,13 +46,27 @@ disp('************************************************'); fprintf('\n');
 SerialTrackPath = 'D:\MATLAB\SerialTrack-main\SerialTrack3D'; % TODO: modify the path
 
 %%%%% Volumetric image path %%%%%
-fileNameAll = 'vol_hydrogel_ind_20190504_cut_0*.mat';
-fileFolder = './imgFolder/img_hydrogel_indentation/';
-  
+% fileNameAll = '20190504*.mat';
+% fileFolder = '';
+
+%%%%% Synthetic cases %%%%%
+DefType = 'rotation';       % {'translation','stretch','simpleshear','rotation'}
+SeedingDensityType = 2;     % {1,2,3,4} % particle seeding density
+fileNameAll = 'vol_*.mat';  % file name(s)
+% ----- file folder name -----
+if strcmp(DefType,'translation')==1
+    fileFolder = ['./imgFolder/img_syn_hardpar/img_trans_hardpar_sd',num2str(SeedingDensityType)];
+elseif strcmp(DefType,'rotation')==1
+    fileFolder = ['./imgFolder/img_syn_hardpar/img_rot_hardpar_sd',num2str(SeedingDensityType)];
+elseif strcmp(DefType,'stretch')==1
+    fileFolder = ['./imgFolder/img_syn_hardpar/img_str_hardpar_sd',num2str(SeedingDensityType)];
+elseif strcmp(DefType,'simpleshear')==1
+    fileFolder = ['./imgFolder/img_syn_hardpar/img_simshear_hardpar_sd',num2str(SeedingDensityType)];
+else
+end
 
 %%%%% Bead detection method %%%%%
-BeadPara.detectionMethod = 2;  % {1-TPT code; 2-regionprops}
-
+BeadPara.detectionMethod = 1; % {1-deconvolution code; 2-regionprops}
 
 %%%%% Image binary mask file %%%%%
 im_roi_mask_file_path = ''; % TODO: leave it as empty if there is no mask file
@@ -62,10 +74,10 @@ im_roi_mask_file_path = ''; % TODO: leave it as empty if there is no mask file
 
 %%%%% Particle detection parameters %%%%%
 %%%%% Bead Parameter %%%%%
-BeadPara.thres = 0.1;           % Threshold for detecting particles
-BeadPara.beadSize = 3;          % Estimated radius of a single particle
-BeadPara.minSize = 3;           % Minimum radius of a single particle
-BeadPara.maxSize = 20;          % Maximum radius of a single particle
+BeadPara.thres = 0.6;           % Threshold for detecting particles
+BeadPara.beadSize = 4;          % Estimated radius of a single particle
+BeadPara.minSize = 10;           % Minimum radius of a single particle
+BeadPara.maxSize = 1000;         % Maximum radius of a single particle
 BeadPara.winSize = [5,5,5];     % By default
 BeadPara.dccd = [1,1,1];        % By default
 BeadPara.abc = [1,1,1];         % By default
@@ -76,15 +88,16 @@ BeadPara.distMissing = 5;       % Distance threshold to check whether particle h
 BeadPara.color = 'white';       % By default
 
 
+
 %% SerialTrack particle tracking
 
 %%%%% Multiple particle tracking (MPT) Parameter %%%%%
-MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|)
+MPTPara.f_o_s = Inf;              % Size of search field: max(|u|,|v|,|w|)
 MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles
 MPTPara.gbSolver = 2;            % Global step solver: 1-moving least square fitting; 2-global regularization; 3-ADMM iterations
 MPTPara.smoothness = 1e-1;       % Coefficient of regularization
-MPTPara.outlrThres = 5;          % Threshold for removing outliers in MPT
+MPTPara.outlrThres = 2;          % Threshold for removing outliers in MPT
 MPTPara.maxIterNum = 20;         % Max ADMM iteration number
 MPTPara.iterStopThres = 1e-3;    % ADMM iteration stopping threshold
 MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
@@ -106,6 +119,7 @@ if strcmp(MPTPara.mode,'inc')==1
 elseif strcmp(MPTPara.mode,'accum')==1
     run_Serial_MPT_3D_hardpar_accum;    
 end
+ 
 
 
 

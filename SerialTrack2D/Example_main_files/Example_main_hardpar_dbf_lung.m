@@ -30,7 +30,7 @@ MPTPara.tstep = 1.6e-4;     % unit: s
 
 %%%%% Code mode %%%%%
 MPTPara.mode = 'dbf'; % {'inc': incremental mode; 
-                      %  'cum': cumulative mode; 
+                      %  'accum': accumulative mode; 
                       %  'dbf': double frame}
 
 MPTPara.parType = 'hard'; % {'hard': hard particle; 
@@ -100,8 +100,8 @@ maxGapTrajSeqLength = 0; % the max frame# gap between connected trajectory segme
 %%%%% Execute SerialTrack particle tracking %%%%%
 if strcmp(MPTPara.mode,'inc')==1
     run_Serial_MPT_2D_hardpar_inc;
-elseif strcmp(MPTPara.mode,'cum')==1
-    run_Serial_MPT_2D_hardpar_cum;    
+elseif strcmp(MPTPara.mode,'accum')==1
+    run_Serial_MPT_2D_hardpar_accum;    
 elseif strcmp(MPTPara.mode,'dbf')==1
     run_Serial_MPT_2D_hardpar_dbf;
 end

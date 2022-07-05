@@ -331,7 +331,7 @@ F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 %%%%% Cone plot grid data: displecement %%%%%
 figure, plotCone2(xstep*x_Grid_refB,ystep*y_Grid_refB,u_Grid_refB*xstep ,v_Grid_refB*ystep );
 set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-title('Tracked cumulative displacement','fontweight','normal');
+title('Tracked accumulative displacement','fontweight','normal');
 axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(2), ...
       ystep*MPTPara.gridxyROIRange.gridy(1), ystep*MPTPara.gridxyROIRange.gridy(2) ]);
 

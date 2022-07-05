@@ -527,43 +527,43 @@ axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(
    
 
   
-%% %%%%% Compute cumulative tracking ratio from emerged trajectories %%%%%
+%% %%%%% Compute accumulative tracking ratio from emerged trajectories %%%%%
 
-disp('%%%%% Plot tracked cumulative displacements %%%%%'); fprintf('\n');
+disp('%%%%% Plot tracked accumulative displacements %%%%%'); fprintf('\n');
 parCoordTrajMat = cell2mat( parCoordTraj );
 
 [row1,col1] = find(isnan(parCoordTrajMat(1:length(Img):end,1))==0);
-trackParCum_ind = row1;
-trackParCum_track_ratio = [];
+trackParaccum_ind = row1;
+trackParaccum_track_ratio = [];
 
 for ImgSeqNum = 2:length(Img)
     [row2,col2] = find(isnan(parCoordTrajMat(ImgSeqNum:length(Img):end,1))==0);
-    trackParCum_ind = intersect(row2,trackParCum_ind);
-    trackParCum_track_ratio(ImgSeqNum-1) = length(trackParCum_ind) /size(parCoord_prev{1},1);
+    trackParaccum_ind = intersect(row2,trackParaccum_ind);
+    trackParaccum_track_ratio(ImgSeqNum-1) = length(trackParaccum_ind) /size(parCoord_prev{1},1);
 end
 
 defList = [2:1:length(Img)];
-fig=figure; ax=axes; hold on; plot(defList,trackParCum_track_ratio,'bs--','linewidth',1);
+fig=figure; ax=axes; hold on; plot(defList,trackParaccum_track_ratio,'bs--','linewidth',1);
 adjust_fig(fig,ax,'','',''); box on; title('');
-xlabel('Image #'); ylabel('Cumulative tracking ratio');
+xlabel('Image #'); ylabel('accumulative tracking ratio');
 try axis([2,length(Img),0,1]); catch; end
 
 
-%%%%% Plot tracked cumulative displacement field %%%%%
+%%%%% Plot tracked accumulative displacement field %%%%%
 %%%%% Make a video %%%%%
-v = VideoWriter('video_2D_inc_cum.avi'); v.FrameRate = 5; open(v); figure,
+v = VideoWriter('video_2D_inc_accum.avi'); v.FrameRate = 5; open(v); figure,
 for ImgSeqNum = 2:length(Img)
     
     parCoordA = parCoordTrajMat(1:length(Img):end,1:2);
     parCoordB = parCoordTrajMat(ImgSeqNum:length(Img):end,1:2);
-    parCoordACum = parCoordA(trackParCum_ind,:);
-    parCoordBCum = parCoordB(trackParCum_ind,:);
-    disp_A2BCum = parCoordBCum - parCoordACum;
+    parCoordAaccum = parCoordA(trackParaccum_ind,:);
+    parCoordBaccum = parCoordB(trackParaccum_ind,:);
+    disp_A2Baccum = parCoordBaccum - parCoordAaccum;
     
     % ----- Cone plot grid data: displecement -----
-    clf; plotCone2(xstep*parCoordBCum(:,1),ystep*parCoordBCum(:,2),xstep*disp_A2BCum(:,1),ystep*disp_A2BCum(:,2));
+    clf; plotCone2(xstep*parCoordBaccum(:,1),ystep*parCoordBaccum(:,2),xstep*disp_A2Baccum(:,1),ystep*disp_A2Baccum(:,2));
     set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-    title(['Tracked cumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    title(['Tracked accumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y');
     axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(2), ...
           ystep*MPTPara.gridxyROIRange.gridy(1), ystep*MPTPara.gridxyROIRange.gridy(2) ]);
@@ -589,23 +589,23 @@ ImgSeqNum = 2; % TODO: assign a Frame #
 
 %%%%% Previously tracked displacement field %%%%%
 if size(parCoord_prev,1) == 1 % if there are just two frames
-    parCoordBCum = parCoordB;
-    parCoordACum = parCoordB - disp_A2B_parCoordB;
-    disp_A2BCum = parCoordBCum - parCoordACum; 
+    parCoordBaccum = parCoordB;
+    parCoordAaccum = parCoordB - disp_A2B_parCoordB;
+    disp_A2Baccum = parCoordBaccum - parCoordAaccum; 
 else % for multiple frames
     parCoordA = parCoordTrajMat(1:length(file_name):end,1:3);
     parCoordB = parCoordTrajMat(ImgSeqNum:length(file_name):end,1:3);
-    parCoordACum = parCoordA(trackParCum_ind,1:3);
-    parCoordBCum = parCoordB(trackParCum_ind,1:3);
-    disp_A2BCum = parCoordBCum - parCoordACum;
+    parCoordAaccum = parCoordA(trackParaccum_ind,1:3);
+    parCoordBaccum = parCoordB(trackParaccum_ind,1:3);
+    disp_A2Baccum = parCoordBaccum - parCoordAaccum;
 end
   
 %%%%% Interpolate scatterred data to gridded data %%%%%
 sxy = min([round(0.5*MPTPara.f_o_s),20])*[1,1]; % Step size for griddata
 smoothness = 1e-3; % Smoothness for regularization; "smoothness=0" means no regularization
 
-[x_Grid_refB,y_Grid_refB,u_Grid_refB]=funScatter2Grid2D(parCoordBCum(:,1),parCoordBCum(:,2),disp_A2BCum(:,1),sxy,smoothness);
-[~,~,v_Grid_refB]=funScatter2Grid2D(parCoordBCum(:,1),parCoordBCum(:,2),disp_A2BCum(:,2),sxy,smoothness);
+[x_Grid_refB,y_Grid_refB,u_Grid_refB]=funScatter2Grid2D(parCoordBaccum(:,1),parCoordBaccum(:,2),disp_A2Baccum(:,1),sxy,smoothness);
+[~,~,v_Grid_refB]=funScatter2Grid2D(parCoordBaccum(:,1),parCoordBaccum(:,2),disp_A2Baccum(:,2),sxy,smoothness);
 
 % Apply ROI image mask
 [u_Grid_refB, v_Grid_refB] = funRmROIOutside(x_Grid_refB,y_Grid_refB,MPTPara.ImgRefMask,u_Grid_refB,v_Grid_refB);
@@ -630,7 +630,7 @@ F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 %%%%% Cone plot grid data: displecement %%%%%
 figure, plotCone2(xstep*x_Grid_refB,ystep*y_Grid_refB,u_Grid_refB*xstep,v_Grid_refB*ystep );
 set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-title('Tracked cumulative displacement','fontweight','normal');
+title('Tracked accumulative displacement','fontweight','normal');
 axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(2), ...
       ystep*MPTPara.gridxyROIRange.gridy(1), ystep*MPTPara.gridxyROIRange.gridy(2) ]);
 

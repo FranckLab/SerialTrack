@@ -8,6 +8,7 @@ This repositry contains the Matlab m-files to run our SerialTrack particle track
 ### Important pages
 * [Download latest version v1.0!](https://github.com/FranckLab/SerialTrack/releases)
 * [Example data] (https://minds.wisconsin.edu/handle/1793/82901) 
+* [Manual](https://github.com/FranckLab/SerialTrack/blob/main/manual.pdf)
 * [FAQ](https://github.com/FranckLab/SerialTrack#faq)
 * [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues)
 * [Bug Fixes/history](https://github.com/FranckLab/SerialTrack/wiki/Bug-Fixes!)
@@ -18,12 +19,11 @@ This repositry contains the Matlab m-files to run our SerialTrack particle track
 
 ### Code installation
 To run SerialTrack, please download MATLAB version later than 2021a and install these code packages/toolboxes:
-* Parallel computing toolbox
-* Wavelets analysis toolbox
-* Image processing toolbox
-* Partial differential equation toolbox
 * Curve fitting toolbox
+* Image processing toolbox
+* Parallel computing toolbox
 * Statistics and Machine Learning Toolbox
+* Wavelets analysis toolbox
 
 ### Input Image Requirements
 * 2D image sequences (at least two frames)

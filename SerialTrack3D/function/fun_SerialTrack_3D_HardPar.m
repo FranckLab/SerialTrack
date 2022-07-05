@@ -157,7 +157,7 @@ end
 % Compute displacement from tracked particles on deformed frame
 disp_A2B_parCoordB = -u_B2A_curr_refB;
 figure, plotCone3(parCoordB(:,1),parCoordB(:,2),parCoordB(:,3), ...
- disp_A2B_parCoordB(:,1),disp_A2B_parCoordB(:,2),disp_A2B_parCoordB(:,3));
+        disp_A2B_parCoordB(:,1),disp_A2B_parCoordB(:,2),disp_A2B_parCoordB(:,3));
 set(gca,'fontsize',18); box on; axis equal; axis tight; view(3);  
 title('Tracked displacements','fontweight','normal');
 xlabel(''); ylabel(''); cb = colorbar; set(cb,'fontsize',18);

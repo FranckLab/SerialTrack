@@ -57,8 +57,8 @@ catch
 end
 
    
-%% ====== Detect particles ======
-%%%%% Particle detection parameters %%%%%
+%% ====== Detect and localize particles ======
+%%%%% Particle detection and localization parameters %%%%%
 % The user input "BeadPara"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -109,7 +109,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Several methods to detect particles %%%%%
+%%%%% Several methods to detect and localize particles %%%%%
 %%%%% Method 1: TPT code %%%%%
 % x{1}{ImgSeqNum} = locateBeads(double(currImg2)/max(double(currImg2(:))),BeadPara); % Detect particles
 % x{1}{ImgSeqNum} = radial2center(double(currImg2)/max(double(currImg2(:))),x{1}{ImgSeqNum},BeadPara); % Localize particles
@@ -203,7 +203,7 @@ axis([2,length(Img),0,1]);
 
 
 %%%%% Save results %%%%%
-disp('%%%%%% ALTPT soft particle tracking: Done! %%%%%%');  
+disp('%%%%%% SerialTrack soft particle tracking: Done! %%%%%%');  
 results_file_name = 'results_2D_softpar.mat';
 mkdir results
 save(['./results/' results_file_name],'xyGrid_prev','uvGrid_B2A_prev','track_A2B_prev','parCoord_prev');

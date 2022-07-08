@@ -65,33 +65,35 @@ elseif strcmp(DefType,'simpleshear')==1
 else
 end
 
-%%%%% Bead detection method %%%%%
-BeadPara.detectionMethod = 1;  % {1-TPT code; 2-regionprops}
- 
 %%%%% Image binary mask file %%%%%
 im_roi_mask_file_path = '';
 
 
-%%%%% Particle detection parameters %%%%%
-%%%%% Bead Parameter %%%%%
+%%%%% Particle detection and localization parameters %%%%%
+
+%%%%% Bead detectiona and localization method %%%%%
+BeadPara.detectionMethod = 1;  % Particle detection method: 1 = TPT (blob finding + radial projection), 
+%                                                           2 = TracTrac (LoG blob finding + lsq fit of gaussian)
+
+%%%%% Bead Parameters %%%%%
 BeadPara.thres = 0.5;           % Threshold for detecting particles
-BeadPara.beadSize = 3;          % Estimated radius of a single particle
-BeadPara.minSize = 4;           % Minimum radius of a single particle
-BeadPara.maxSize = 100;         % Maximum radius of a single particle
-BeadPara.winSize = [5,5,5];     % By default
-BeadPara.dccd = [1,1,1];        % By default
-BeadPara.abc = [1,1,1];         % By default
-BeadPara.forloop = 1;           % By default
-BeadPara.randNoise = 1e-7;      % By default
+BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
+BeadPara.minSize = 4;           % Minimum volume of a single particle [px^3]
+BeadPara.maxSize = 100;         % Maximum volume of a single particle [px^3]
+BeadPara.winSize = [5,5,5];     % Default (window size for bead localization)
+BeadPara.dccd = [1,1,1];        % Default (grid size for localization)
+BeadPara.abc = [1,1,1];         % Default (grid size refinement for localization)
+BeadPara.forloop = 1;           % "for" or linear indexing
+BeadPara.randNoise = 1e-7;      % Default small random background noise
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not 
-BeadPara.color = 'white';       % By default
+BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not [px] 
+BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 
 %% SerialTrack particle tracking
 
-%%%%% Multiple particle tracking (MPT) Parameter %%%%%
-MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|)
+%%%%% Multiple particle tracking (MPT) parameters %%%%%
+MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|) [px]
 MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles
 MPTPara.gbSolver = 2;            % Global step solver: 1-moving least square fitting; 2-global regularization; 3-ADMM iterations
@@ -100,15 +102,15 @@ MPTPara.outlrThres = 5;          % Threshold for removing outliers in MPT
 MPTPara.maxIterNum = 20;         % Max ADMM iteration number
 MPTPara.iterStopThres = 1e-3;    % ADMM iteration stopping threshold
 MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
-MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge
+MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 MPTPara.usePrevResults = 1;      % Whether use previous results or not: 0-no; 1-yes;  
 
 
 %%%% Postprocessing: merge trajectory segments %%%%%
-distThres = 1;              % distance threshold to connect split trajectory segments
+distThres = 1;              % distance threshold to connect split trajectory segments [px]
 extrapMethod = 'pchip';     % extrapolation scheme to connect split trajectory segments
                             % suggestion: 'nearest' for Brownian motion                          
-minTrajSegLength = 10;      % the minimum length of trajectory segment that will be extrapolate 
+minTrajSegLength = 10;      % the minimum length of trajectory segment that will be extrapolate [px] 
 maxGapTrajSeqLength = 0;    % the max frame# gap between connected trajectory segments
 
 

@@ -99,33 +99,33 @@ end
 %%%%% Particle detection parameters %%%%%
 %%%%%%%%%% Atom dance %%%%%%%%%%%%%
 %%%%% Bead Parameter %%%%%
-% BeadPara.thres = 0.35 ;           % Threshold for detecting particles
-% BeadPara.beadSize = 0;          % Estimated radius of a single particle
-% BeadPara.minSize = 2;           % Minimum radius of a single particle
-% BeadPara.maxSize = 40;          % Maximum radius of a single particle
-% BeadPara.winSize = [5, 5];      % By default
-% BeadPara.dccd = [1,1];          % By default
-% BeadPara.abc = [1,1];           % By default
-% BeadPara.forloop = 1;           % By default
-% BeadPara.randNoise = 1e-7;      % By default
+% BeadPara.thres = 0.35 ;         % Threshold for detecting particles
+% BeadPara.beadSize = 0;          % Estimated radius of a single particle [px]
+% BeadPara.minSize = 2;           % Minimum radius of a single particle [px]
+% BeadPara.maxSize = 40;          % Maximum area of a single particle [px^2]
+% BeadPara.winSize = [5, 5];      % Default (not used)
+% BeadPara.dccd = [1,1];          % Default (not used)
+% BeadPara.abc = [1,1];           % Default (not used)
+% BeadPara.forloop = 1;           % Default (not used)
+% BeadPara.randNoise = 1e-7;      % Default (not used)
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not 
-% BeadPara.color = 'black';       % Bead color 
+% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
+% BeadPara.color = 'black';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%% Pipe %%%%%%%%%%%%%
 %%%%% Bead Parameter %%%%%
 % BeadPara.thres = 0.5;           % Threshold for detecting particles
-% BeadPara.beadSize = 3;          % Estimated radius of a single particle
-% BeadPara.minSize = 2;           % Minimum radius of a single particle
-% BeadPara.maxSize = 20;          % Maximum radius of a single particle
-% BeadPara.winSize = [5, 5];      % By default
-% BeadPara.dccd = [1,1];          % By default
-% BeadPara.abc = [1,1];           % By default
-% BeadPara.forloop = 1;           % By default
-% BeadPara.randNoise = 1e-7;      % By default
+% BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
+% BeadPara.minSize = 2;           % Minimum area of a single particle [px^2]
+% BeadPara.maxSize = 20;          % Maximum area of a single particle [px^2]
+% BeadPara.winSize = [5, 5];      % Default (not used)
+% BeadPara.dccd = [1,1];          % Default (not used)
+% BeadPara.abc = [1,1];           % Default (not used)
+% BeadPara.forloop = 1;           % Default (not used)
+% BeadPara.randNoise = 1e-7;      % Default (not used)
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not 
-% BeadPara.color = 'white';
+% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
+% BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ImgSeqNum = 1; % First reference image
@@ -209,7 +209,7 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 
 %% %%%%% Initialization %%%%%
 %%%%%  MPT parameters %%%%%
-% MPTPara.f_o_s = 30;              % Size of search field: max(|u|,|v|)
+% MPTPara.f_o_s = 30;              % Size of search field: max(|u|,|v|) [px]
 % MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 % MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles
 % MPTPara.locSolver = 1;           % Local solver: 1-topology-based feature; 2-histogram-based feature first and then topology-based feature;
@@ -219,7 +219,7 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 % MPTPara.maxIterNum = 20;         % Max ADMM iteration number
 % MPTPara.iterStopThres = 1e-2;    % ADMM iteration stopping threshold
 % MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
-% MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge
+% MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 % MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;
 
 %%%%%% To store results %%%%%

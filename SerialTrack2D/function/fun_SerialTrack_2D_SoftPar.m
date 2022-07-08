@@ -48,7 +48,7 @@ function [xyGrid_prevCurr,uvGrid_B2A_refB_prevCurr,track_A2B,parCoordBCurr] = fu
 %%%%% Initialize iteration %%%%%
 warning('off'); iterNum = 0; 
 
-try f_o_s = MPTPara.f_o_s;                   catch f_o_s = 20;              end   % Size of search field
+try f_o_s = MPTPara.f_o_s;                   catch f_o_s = 20;              end   % Size of search field [px]
 try n_neighborsMax = MPTPara.n_neighborsMax; catch n_neighborsMax = 25;     end   % Max # of neighboring particles
 try n_neighborsMin = MPTPara.n_neighborsMin; catch n_neighborsMin = 1;      end   % Min # of neighboring particles
 try locSolver = MPTPara.locSolver;           catch locSolver = 1;           end   % Local solver: 1-topology-based feature; 2-histogram-based feature first and then topology-based feature;
@@ -59,7 +59,7 @@ try maxIterNum = MPTPara.maxIterNum;         catch maxIterNum = 20;         end 
 try iterStopThres = MPTPara.iterStopThres;   catch iterStopThres = 1e-2;    end   % ADMM iteration stopping threshold
 try usePrevResults = MPTPara.usePrevResults; catch usePrevResults = 0;      end   % Whether use previous results or not  
 try strain_n_neighbors = MPTPara.strain_n_neighbors; 
-                                             catch strain_n_neighbors = 20; end   % Size of virtual strain gauge
+                                             catch strain_n_neighbors = 20; end   % Size of virtual strain gauge [px]
 try strain_f_o_s = MPTPara.strain_f_o_s;     catch strain_f_o_s = 50;       end   % # of neighboring particles used in strain gauge
 try gridxyROIRange = MPTPara.gridxyROIRange; 
 catch
@@ -188,7 +188,7 @@ while iterNum < maxIterNum
     
     
     %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % SECTION 1: Particle detection
+    % SECTION 1: Particle detection and localization
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %%%%% Pre-process bead image if bead color is black %%%%%
@@ -205,7 +205,7 @@ while iterNum < maxIterNum
         currImg2 = currImg;
     end
     
-    %%%%% Detect particles %%%%%
+    %%%%% Detect and localize particles %%%%%
     x{1}{ImgSeqNum} = f_detect_particles(double(currImg2)/max(double(currImg2(:))),BeadPara);
     
     %%%%% Add back gridxyROIRange %%%%%

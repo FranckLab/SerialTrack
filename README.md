@@ -2,8 +2,7 @@
 
 ### SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking    
 
- 
-This repositry contains the Matlab m-files to run our SerialTrack particle tracking algorithm. This code package includes both 2D and 3D particle trackings to track their full-field 2D and 3D displacement fields, respectively. More details can be found in our SerialTrack paper (https://doi.org/10.48550/arXiv.2203.12573).
+This repository contains the Matlab m-files to run our SerialTrack particle tracking algorithm. This code package includes both 2D and 3D particle tracking scripts for full-field 2D and 3D displacement fields, respectively. More details can be found in our SerialTrack paper (https://doi.org/10.48550/arXiv.2203.12573).
   
 ### Important pages
 * [Download latest version v1.0!](https://github.com/FranckLab/SerialTrack/releases)
@@ -18,6 +17,7 @@ This repositry contains the Matlab m-files to run our SerialTrack particle track
 ## Install and execute SerialTrack
 
 ### Code installation
+
 To run SerialTrack, please download MATLAB version later than 2021a and install these code packages/toolboxes:
 * Curve fitting toolbox
 * Image processing toolbox
@@ -25,14 +25,21 @@ To run SerialTrack, please download MATLAB version later than 2021a and install 
 * Statistics and Machine Learning Toolbox
 * Wavelets analysis toolbox
 
+
 ### Input Image Requirements
+
 * 2D image sequences (at least two frames)
 * 3D volumetric images (at least two volumetric stacks)
 
+Images should have segment-able and localizable particles: limited or no particle clusters, particles distinguishable from noise, roughly spherically/cylindrically symmetric, size (roughly) 3 px to 20 px diameter. See examples of particles in the test cases. Custom pre-processing, segmentation, and localization codes can be straightforwardly incorporated (and are encouraged for challenging imaging or specimen conditions).
+
 ### Running included example case
+
 1. Make sure that the main files and the supplemental m files (from file exchange) are added to the path in Matlab.
 2. Download and save the [example data sets] in the "./imgFolder" folder. 
 3. Run the example*.m files in the folder "./Example_main_files"
+    1. Edit the paths for SerialTrack and images (as needed)
+    2. Check for lines labeled "TODO" and follow instructions (as needed)
    
 
 ## Cite
@@ -41,5 +48,4 @@ If used please cite:
  
  
 ## Contact and support
-For questions, please first refer to [FAQ](https://github.com/FranckLab/SerialTrack#faq) and [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues). Add a new question if similar issue hasn't been reported. We shall help you at the earliest. The author's contact information can be found at [Franck Lab](https://www.franck.engr.wisc.edu/).
-
+For questions, please first refer to [FAQ](https://github.com/FranckLab/SerialTrack#faq) and [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues). Add a new question if similar issue hasn't been reported. The author's contact information can be found at [Franck Lab](https://www.franck.engr.wisc.edu/).

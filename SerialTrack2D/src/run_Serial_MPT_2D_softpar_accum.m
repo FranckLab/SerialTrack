@@ -57,8 +57,8 @@ catch
 end
 
    
-%% ====== Detect particles ======
-%%%%% Particle detection parameters %%%%%
+%% ====== Detect and localize particles ======
+%%%%% Particle detection and localization parameters %%%%%
 % The user input "BeadPara"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -71,11 +71,11 @@ im_roi_mask_file_path = '';
 
 %%%%% Particle detection and localization parameters %%%%%
 
-%%%%% Bead detectiona nd localization method %%%%%
+%%%%% Bead detectiona and localization method %%%%%
 BeadPara.detectionMethod = 1;  % Particle detection method: 1 = TPT (blob finding + radial projection), 
 %                                                           2 = TracTrac (LoG blob finding + lsq fit of gaussian)
 
-%%%%% Bead Parameter %%%%%
+%%%%% Bead Parameters %%%%%
 BeadPara.thres = 0.5;           % Threshold for detecting particles
 BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
 BeadPara.minSize = 4;           % Minimum volume of a single particle [px^3]
@@ -92,7 +92,7 @@ BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' 
 
 %% SerialTrack particle tracking
 
-%%%%% Multiple particle tracking (MPT) Parameter %%%%%
+%%%%% Multiple particle tracking (MPT) parameters %%%%%
 MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|) [px]
 MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles

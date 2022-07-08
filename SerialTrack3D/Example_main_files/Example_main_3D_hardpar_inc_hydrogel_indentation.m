@@ -66,10 +66,10 @@ BeadPara.thres = 0.1;           % Threshold for detecting particles
 BeadPara.beadSize = 3;          % Estimated radius of a single particle
 BeadPara.minSize = 3;           % Minimum volume of a single particle [px^3]
 BeadPara.maxSize = 20;          % Maximum volume of a single particle [px^3]
-BeadPara.winSize = [5,5,5];     % Default [not used for methd 2]
-BeadPara.dccd = [1,1,1];        % Default [not used for methd 2]
-BeadPara.abc = [1,1,1];         % Default [not used for methd 2]
-BeadPara.forloop = 1;           % Default [not used for methd 2]
+BeadPara.winSize = [5,5,5];     % Default [not used for method 2]
+BeadPara.dccd = [1,1,1];        % Default [not used for method 2]
+BeadPara.abc = [1,1,1];         % Default [not used for method 2]
+BeadPara.forloop = 1;           % Default [not used for method 2]
 BeadPara.randNoise = 1e-7;      % Default small number for background noise
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
 BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not 

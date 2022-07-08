@@ -41,7 +41,7 @@ function [matches_A2B,u_B2A_curr_refB,track_A2B] = f_track_serial_match2D( parCo
 
 %% %%%%%%%%% Parameter inputs %%%%%%%%%%%
 % Default parameters
-f_o_s = 30;              % Size of search field
+f_o_s = 30;              % Size of search field [px]
 n_neighborsMax = 25;     % Max # of neighboring particles
 n_neighborsMin = 1;      % Min # of neighboring particles
 locSolver = 1;           % Local solver: 1-topology-based feature; 2-histogram-based feature first and then topology-based feature;
@@ -51,9 +51,9 @@ outlrThres = 2;          % Threshold for removing outliers in TPT (Westerweel et
 maxIterNum = 20;         % Max ADMM iteration number
 iterStopThres = 1e-3;    % ADMM iteration stopping threshold
 usePrevResults = 0;      % Whether use previous results or not  
-strain_f_o_s = 50;       % Size of virtual strain gauge
+strain_f_o_s = 50;       % Size of virtual strain gauge [px]
 strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
-BeadparaDistMissing = 2; % Distance threshold to check whether particle has a match or not 
+BeadparaDistMissing = 2; % Distance threshold to check whether particle has a match or not [px]
 gridxyROIRange.gridx = [min(parCoordA(:,1)),max(parCoordA(:,1))]; % ROI-gridx
 gridxyROIRange.gridy = [min(parCoordA(:,2)),max(parCoordA(:,2))]; % ROI-gridy
 

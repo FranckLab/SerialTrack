@@ -13,7 +13,7 @@
 % Date: 02/2022
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Initialization
+%% Initialization 
 close all; clear all; clc; clearvars -global
 disp('************************************************');
 disp('*** Welcome to SerialTrack Particle Tracking ***');
@@ -21,7 +21,7 @@ disp('************************************************');
 addpath( './function/','./src/','./Scatter2Grid3D' ); 
 
  
-%% User defined parameters %%%%%
+%% User defined parameters %%%%% 
 
 %%%%% Problem dimension and units %%%%%
 MPTPara.DIM = 3;    % problem dimension

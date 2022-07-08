@@ -60,7 +60,7 @@ maskfilename = '';
 %%%%% Particle detection and localization parameters %%%%%
 
 %%%%% Bead detection and localization method %%%%%
-BeadPara.detectionMethod = 1;   % Particle detection method: 1 = TPT (blob finding + radial projection), 
+BeadPara.detectionMethod = 2;   % Particle detection method: 1 = TPT (blob finding + radial projection), 
 %                                                            2 = TracTrac (LoG blob finding + lsq fit of gaussian)
 
 %%%%% Bead parameters %%%%%

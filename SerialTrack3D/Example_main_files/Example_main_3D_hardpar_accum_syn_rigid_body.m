@@ -21,7 +21,7 @@ disp('************************************************');
 addpath( './function/','./src/','./Scatter2Grid3D/' ); 
 
  
-%% user defined parameters %%%%%
+%% user-defined parameters %%%%%
 
 %%%%% Problem dimension and units %%%%%
 MPTPara.DIM = 3;   % problem dimension
@@ -71,11 +71,11 @@ im_roi_mask_file_path = ''; % TODO: leave it as empty if there is no mask file
 
 %%%%% Particle detection and localization parameters %%%%%
 
-%%%%% Bead detectiona nd localization method %%%%%
+%%%%% Bead detectiona and localization method %%%%%
 BeadPara.detectionMethod = 1;  % Particle detection method: 1 = TPT (blob finding + radial projection), 
 %                                                           2 = TracTrac (LoG blob finding + lsq fit of gaussian)
 
-%%%%% Bead Parameter %%%%%
+%%%%% Bead parameters %%%%%
 BeadPara.thres = 0.6;           % Threshold for detecting particles
 BeadPara.beadSize = 4;          % Estimated radius of a single particle [px]
 BeadPara.minSize = 10;           % Minimum volume of a single particle [px^3]
@@ -93,7 +93,7 @@ BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' 
 
 %% SerialTrack particle tracking
 
-%%%%% Multiple particle tracking (MPT) Parameter %%%%%
+%%%%% Multiple particle tracking (MPT) parameters %%%%%
 MPTPara.f_o_s = Inf;              % Size of search field: max(|u|,|v|,|w|) [px]
 MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles

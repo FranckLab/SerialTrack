@@ -53,17 +53,17 @@ disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
 %%%%% Particle detection parameters %%%%%
 %%%%% Bead Parameter %%%%%
 % BeadPara.thres = 0.4;           % Threshold for detecting particles
-% BeadPara.beadSize = 0;          % Estimated radius of a single particle
-% BeadPara.minSize = 2;           % Minimum radius of a single particle
-% BeadPara.maxSize = 1000;        % Maximum radius of a single particle
-% BeadPara.winSize = [5, 5, 5];   % By default
-% BeadPara.dccd = [1,1,1];        % By default
-% BeadPara.abc = [1,1,1];         % By default
-% BeadPara.forloop = 1;           % By default
-% BeadPara.randNoise = 1e-7;      % By default
+% BeadPara.beadSize = 0;          % Estimated radius of a single particle [px]
+% BeadPara.minSize = 2;           % Minimum area of a single particle [px^2]
+% BeadPara.maxSize = 1000;        % Maximum area of a single particle [px^2]
+% BeadPara.winSize = [5, 5, 5];   % Default window search size for a single particle [px]
+% BeadPara.dccd = [1,1,1];        % Default [not currently used]
+% BeadPara.abc = [1,1,1];         % Default [not currently used]
+% BeadPara.forloop = 1;           % Default [not currently used]
+% BeadPara.randNoise = 1e-7;      % Default [not currently used]
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not 
-% BeadPara.color = 'white';       % By default
+% BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not [px]
+% BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ImgSeqNum = 1; % First reference image

@@ -64,9 +64,6 @@ elseif strcmp(DefType,'simpleshear')==1
     fileFolder = ['./imgFolder/img_syn_hardpar/img_simshear_hardpar_sd',num2str(SeedingDensityType)];
 else
 end
- 
-
-BeadPara.detectionMethod = 1; % {1-deconvolution code; 2-regionprops}
 
 %%%%% Image binary mask file %%%%%
 im_roi_mask_file_path = ''; % TODO: leave it as empty if there is no mask file
@@ -83,10 +80,10 @@ BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
 BeadPara.minSize = 4;           % Minimum volume of a single particle [px^3]
 BeadPara.maxSize = 100;         % Maximum volume of a single particle [px^3]
 BeadPara.winSize = [5,5,5];     % Default window size for particle localization [used for method 1]
-BeadPara.dccd = [1,1,1];        % Default [used for method 1]
-BeadPara.abc = [1,1,1];         % Default [used for method 1]
-BeadPara.forloop = 1;           % Default [used for method 1]
-BeadPara.randNoise = 1e-7;      % Default [used for method 1]
+BeadPara.dccd = [1,1,1];        % Default [grid spacing for localization in method 1]
+BeadPara.abc = [1,1,1];         % Default [grid spacing factor for localization in method 1]
+BeadPara.forloop = 1;           % Default ["for" of linear indexing in method 1]
+BeadPara.randNoise = 1e-7;      % Default [small amount of background noise method 1]
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
 BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not [px]
 BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
@@ -94,7 +91,7 @@ BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' 
 
 %% SerialTrack particle tracking
 
-%%%%% Multiple particle tracking (MPT) Parameter %%%%%
+%%%%% Multiple particle tracking (MPT) Parameters %%%%%
 MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|) [px]
 MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles

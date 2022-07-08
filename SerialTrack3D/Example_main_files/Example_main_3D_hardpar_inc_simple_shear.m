@@ -69,8 +69,8 @@ BeadPara.detectionMethod = 2;   % Particle detection method: 1 = TPT (blob findi
 %%%%% Bead Parameter %%%%%
 BeadPara.thres = 0.1;           % Threshold for detecting particles
 BeadPara.beadSize = 20;         % Estimated radius of a single particle
-BeadPara.minSize = 5;           % Minimum volume of a single particle [px^2]
-BeadPara.maxSize = 10000;       % Maximum volume of a single particle [px^2]
+BeadPara.minSize = 5;           % Minimum volume of a single particle [px^3]
+BeadPara.maxSize = 10000;       % Maximum volume of a single particle [px^3]
 BeadPara.winSize = [5,5,5];     % Default [not used for method 2]
 BeadPara.dccd = [1,1,1];        % Default [not used for method 2]
 BeadPara.abc = [1,1,1];         % Default [not used for method 2]

@@ -38,6 +38,8 @@ Images should have segment-able and localizable particles: limited or no particl
 1. Make sure that the main files and the supplemental m files (from file exchange) are added to the path in Matlab.
 2. Download and save the [example data sets] in the "./imgFolder" folder. 
 3. Run the example*.m files in the folder "./Example_main_files"
+    1. Edit the paths for SerialTrack and images (as needed)
+    2. Check for lines labeled "TODO" and follow instructions (as needed)
    
 
 ## Cite

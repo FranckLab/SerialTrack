@@ -56,7 +56,7 @@ else
 end
 
 
-%%%%% Particle detection parameters %%%%%
+%%%%% Particle detection and localization parameters %%%%%
 %%%%% Bead parameters %%%%%
 BeadPara.thres = 0.5;           % Threshold for detecting particles
 BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
@@ -74,7 +74,7 @@ BeadPara.color = 'white';       % Bead color: 'white' -or- 'black'
 
 %% SerialTrack particle tracking
 
-%%%%% Multiple particle tracking (MPT) Parameter %%%%%
+%%%%% Multiple particle tracking (MPT) Parameters %%%%%
 MPTPara.f_o_s = Inf;             % Size of search field: max(|u|,|v|) [px]
 MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles

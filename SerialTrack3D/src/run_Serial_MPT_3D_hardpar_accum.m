@@ -51,7 +51,7 @@ disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
    
 %% ====== Detect particles ======
 %%%%% Particle detection parameters %%%%%
-%%%%% Bead Parameter %%%%%
+%%%%% Bead Parameters %%%%%
 % BeadPara.detectionMethod = 2;   % Particle detection method: 1 = TPT (blob finding + radial projection), 
 %                                                              2 = TracTrac (LoG blob finding + lsq fit of gaussian)
 % BeadPara.thres = 0.4;           % Threshold for detecting particles
@@ -85,7 +85,6 @@ if BeadPara.detectionMethod == 1
 %%%%% Method 2: Modified TracTrac code %%%%%
 elseif BeadPara.detectionMethod == 2
     x{1}{ImgSeqNum} = f_detect_particles3(double(Img{ImgSeqNum})/max(double(Img{ImgSeqNum}(:))),BeadPara);
-    % x{1}{ImgSeqNum} = radialcenter3dvec(double(Img{ImgSeqNum}),x{1}{ImgSeqNum},BeadPara); % Localize particles
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -109,8 +108,8 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 
 
 %% %%%%% Initialization %%%%%
-%%%%% MPT Parameter %%%%%
-% MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|)
+%%%%% MPT Parameters %%%%%
+% MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|) [px]
 % MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 % MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles
 % MPTPara.gbSolver = 2;            % Global step solver: 1-moving least square fitting; 2-global regularization; 3-ADMM iterations
@@ -119,7 +118,7 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 % MPTPara.maxIterNum = 20;         % Max ADMM iteration number
 % MPTPara.iterStopThres = 1e-2;    % ADMM iteration stopping threshold
 % MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
-% MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge
+% MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 % MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;
 
 %%%%%% To store results %%%%%

@@ -44,9 +44,9 @@ disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
 %%%%%%%%%% Pipe %%%%%%%%%%%%%
 %%%%% Bead Parameter %%%%%
 BeadPara.thres = 0.5;           % Threshold for detecting particles
-BeadPara.beadSize = 3;          % Estimated radius of a single particle
-BeadPara.minSize = 2;           % Minimum radius of a single particle
-BeadPara.maxSize = 20;          % Maximum radius of a single particle
+BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
+BeadPara.minSize = 2;           % Minimum area of a single particle [px^2]
+BeadPara.maxSize = 20;          % Maximum area of a single particle [px^2]
 BeadPara.winSize = [5, 5];      % By default
 BeadPara.dccd = [1,1];          % By default
 BeadPara.abc = [1,1];           % By default
@@ -54,7 +54,7 @@ BeadPara.forloop = 1;           % By default
 BeadPara.randNoise = 1e-7;      % By default
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
 BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not 
-BeadPara.color = 'white';
+BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ImgSeqNum = 1; % First reference image
@@ -76,7 +76,7 @@ if strcmp(BeadPara.color,'black')
     ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
     bw = imbinarize(uint16(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8); % figure, imshow(bws2);
     bws2 = bwareaopen(bw,round(pi*BeadPara.minSize^2)); % remove all object containing fewer than BeadPara.minSize
-    removeobjradius = BeadPara.minSize; % fill a gap in the pen's cap
+    removeobjradius = BeadPara.minSize; % fill a gap in the particles
     se = strel('disk',removeobjradius);
     bws2 = imclose(bws2,se);
     currImg2 = double(bws2); % figure, imshow(uint8(currImg2));
@@ -86,7 +86,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Several methods to detect particles %%%%%
+%%%%% Several methods to detect and localize particles %%%%%
 %%%%% Method 1: TPT code %%%%%
 % x{1}{ImgSeqNum} = locateBeads(double(currImg2)/max(double(currImg2(:))),BeadPara); % Detect particles
 % x{1}{ImgSeqNum} = radial2center(double(currImg2)/max(double(currImg2(:))),x{1}{ImgSeqNum},BeadPara); % Localize particles

@@ -2,12 +2,12 @@
 
 ### SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking    
 
- 
-This repository contains the Matlab m-files to run our SerialTrack particle tracking algorithm. This code package includes both 2D and 3D particle tracking scripts for full-field 2D and 3D displacement fields, respectively. More details can be found in our SerialTrack paper (***Link to be updated***).
+This repository contains the Matlab m-files to run our SerialTrack particle tracking algorithm. This code package includes both 2D and 3D particle tracking scripts for full-field 2D and 3D displacement fields, respectively. More details can be found in our SerialTrack paper (https://doi.org/10.48550/arXiv.2203.12573).
   
 ### Important pages
 * [Download latest version v1.0!](https://github.com/FranckLab/SerialTrack/releases)
-* [Example data] https://uwmadison.box.com/s/vohfmyoho82zymjiiwkyaqhpfwlv4hmr (***Datasets link to be updated***)
+* [Example data] (https://minds.wisconsin.edu/handle/1793/82901) 
+* [Manual](https://github.com/FranckLab/SerialTrack/blob/main/manual.pdf)
 * [FAQ](https://github.com/FranckLab/SerialTrack#faq)
 * [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues)
 * [Bug Fixes/history](https://github.com/FranckLab/SerialTrack/wiki/Bug-Fixes!)
@@ -18,16 +18,13 @@ This repository contains the Matlab m-files to run our SerialTrack particle trac
 
 ### Code installation
 
-To run SerialTrack, please download MATLAB (development is on 2021a, older versions may work but are not supported) and install these code packages/toolboxes:
-* System Identification Toolbox
-* Image Processing Toolbox
+To run SerialTrack, please download MATLAB version later than 2021a and install these code packages/toolboxes:
+* Curve fitting toolbox
+* Image processing toolbox
+* Parallel computing toolbox
 * Statistics and Machine Learning Toolbox
-* Partial Differential Equation Toolbox
-* Wavelet Toolbox
-* Curve Fitting Toolbox
-* Parallel Computing Toolbox
-* MATLAB Parallel Server
-* Polyspace Bug Finder
+* Wavelets analysis toolbox
+
 
 ### Input Image Requirements
 
@@ -39,19 +36,14 @@ Images should have segment-able and localizable particles: limited or no particl
 ### Running included example case
 
 1. Make sure that the main files and the supplemental m files (from file exchange) are added to the path in Matlab.
-2. Download and save the [example data sets](***Datasets link to be updated***) in the "./imgFolder" folder. 
+2. Download and save the [example data sets] in the "./imgFolder" folder. 
 3. Run the example*.m files in the folder "./Example_main_files"
    
 
 ## Cite
 If used please cite:
-[](*** Paper link to be updated ***)
-
-```bibtex
-@article{ 
-}
-}
-```
-
+[1] Jin Yang, Yue Yin, Alexander K. Landauer, Selda Buyuktozturk, Jing Zhang, Luke Summey, Alexander McGhee, Matt K. Fu, John O. Dabiri, Christian Franck. SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking. (2022) https://doi.org/10.48550/arXiv.2203.12573
+ 
+ 
 ## Contact and support
 For questions, please first refer to [FAQ](https://github.com/FranckLab/SerialTrack#faq) and [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues). Add a new question if similar issue hasn't been reported. The author's contact information can be found at [Franck Lab](https://www.franck.engr.wisc.edu/).

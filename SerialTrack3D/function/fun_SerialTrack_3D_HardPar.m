@@ -48,7 +48,7 @@ warning('off');
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SECTION 1: Particle detection
+% SECTION 1: Particle detection and localization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%% Load current deformed frame %%%%%
@@ -69,7 +69,7 @@ else
     currImg2 = currImg;
 end
 
-%%%%% Several methods to detect particles %%%%%
+%%%%% Several methods to detect and localize particles %%%%%
 try 
     BeadPara.detectionMethod = BeadPara.detectionMethod;
 catch
@@ -83,8 +83,7 @@ if BeadPara.detectionMethod == 1
 % ----------------------------
 %%%%% Method 2: Modified TracTrac code %%%%%
 elseif BeadPara.detectionMethod == 2
-    x{1}{ImgSeqNum} = f_detect_particles3(double(currImg2)/max(double(currImg2(:))),BeadPara);
-    % x{1}{ImgSeqNum} = radialcenter3dvec(double(currImg2),x{1}{ImgSeqNum},BeadPara); % Localize particles
+    x{1}{ImgSeqNum} = f_detect_particles3(double(currImg2)/max(double(currImg2(:))),BeadPara); %detect and localize particles
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -157,7 +156,7 @@ end
 % Compute displacement from tracked particles on deformed frame
 disp_A2B_parCoordB = -u_B2A_curr_refB;
 figure, plotCone3(parCoordB(:,1),parCoordB(:,2),parCoordB(:,3), ...
- disp_A2B_parCoordB(:,1),disp_A2B_parCoordB(:,2),disp_A2B_parCoordB(:,3));
+        disp_A2B_parCoordB(:,1),disp_A2B_parCoordB(:,2),disp_A2B_parCoordB(:,3));
 set(gca,'fontsize',18); box on; axis equal; axis tight; view(3);  
 title('Tracked displacements','fontweight','normal');
 xlabel(''); ylabel(''); cb = colorbar; set(cb,'fontsize',18);

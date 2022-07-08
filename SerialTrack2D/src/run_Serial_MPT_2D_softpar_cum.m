@@ -1,9 +1,9 @@
-% %%%%%%%%%%%%%%%%%% SerialTrack (2D cumulative mode) %%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%% SerialTrack (2D accumulative mode) %%%%%%%%%%%%%%%%%
 % Main file of code "SerialTrack"
 % ***********************************************
 % Dimension:            2D
 % Particle rigidity:    soft (particle shape is not rigid) 
-% Tracking mode:        cumulative
+% Tracking mode:        accumulative
 % -----------------------------------------------
 %
 % -----------------------------------------------
@@ -186,8 +186,8 @@ for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
       
 end
   
-%% %%%%% Cumulative tracking ratio %%%%%
-disp('%%%%% Calculate cumulative tracking ratio %%%%%'); fprintf('\n');
+%% %%%%% accumulative tracking ratio %%%%%
+disp('%%%%% Calculate accumulative tracking ratio %%%%%'); fprintf('\n');
 track_ratio = zeros(length(Img)-1,1);
 DefType = 'exp'; defList = [2:1:length(Img)]';
   
@@ -205,7 +205,8 @@ axis([2,length(Img),0,1]);
 %%%%% Save results %%%%%
 disp('%%%%%% ALTPT soft particle tracking: Done! %%%%%%');  
 results_file_name = 'results_2D_softpar.mat';
-save(results_file_name,'xyGrid_prev','uvGrid_B2A_prev','track_A2B_prev','parCoord_prev');
+mkdir results
+save(['./results/' results_file_name],'xyGrid_prev','uvGrid_B2A_prev','track_A2B_prev','parCoord_prev');
  
 
 
@@ -213,8 +214,8 @@ save(results_file_name,'xyGrid_prev','uvGrid_B2A_prev','track_A2B_prev','parCoor
 % Postprocessing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-%%%%% Visualize tracked cumulative displacement of each frame %%%%%
-disp('%%%%% Plot tracked cumulative deformations %%%%%'); fprintf('\n');
+%%%%% Visualize tracked accumulative displacement of each frame %%%%%
+disp('%%%%% Plot tracked accumulative deformations %%%%%'); fprintf('\n');
 
 %%%%% Experimental parameters %%%%%
 try xstep = MPTPara.xstep; catch, xstep = 1; end % unit: um/px
@@ -223,7 +224,7 @@ try tstep = MPTPara.tstep; catch, tstep = 1; end % unit: us
  
 %%%%% Plot tracked incremental displacement field %%%%%
 %%%%% Make a video %%%%%
-v = VideoWriter('video_2D_cum_softpar.avi'); v.FrameRate = 5; open(v); figure,
+v = VideoWriter('video_2D_accum_softpar.avi'); v.FrameRate = 5; open(v); figure,
 
 for ImgSeqNum = [ 51 ] % 2 : length(Img) % ImgSeqNum: Frame #
     
@@ -247,13 +248,13 @@ for ImgSeqNum = [ 51 ] % 2 : length(Img) % ImgSeqNum: Frame #
     % %%%%% Plot displacements refA %%%%%
     % clf,  plotCone2(xScatter_refA*xstep,yScatter_refA*xstep,disp_A2B_uScatter*xstep,disp_A2B_vScatter*xstep);
     % set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-    % title(['Tracked cumulative displacement (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    % title(['Tracked accumulative displacement (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     % xlabel(''); ylabel('');
     
     %%%%% Plot displacements refB %%%%%
     clf,  plotCone2(xScatter_refB*xstep,yScatter_refB*xstep,disp_A2B_uScatter*xstep,disp_A2B_vScatter*xstep);
     set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-    title(['Tracked cumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    title(['Tracked accumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y');
     axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ...
                 MPTPara.gridxyROIRange.gridy(1), MPTPara.gridxyROIRange.gridy(2) ]);
@@ -322,6 +323,7 @@ axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ..
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp('Press "Ctrl + C" and modify codes below to plot interpolated displacements and strains on a uniform grid mesh');
+disp(['Press "Enter" key to keep running the code']);
 pause;
 
 ImgSeqNum = 4; % Frame #

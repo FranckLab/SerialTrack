@@ -41,7 +41,7 @@ function [matches_A2B,u_B2A_curr_refB,track_A2B] = f_track_serial_match3D( parCo
 
 %% %%%%%%%%% Parameter inputs %%%%%%%%%%%
 % Default parameters
-f_o_s = 60;              % Size of search field
+f_o_s = 60;              % Size of search field [px]
 n_neighborsMax = 25;     % Max # of neighboring particles
 n_neighborsMin = 1;      % Min # of neighboring particles
 gbSolver = 1;            % Global step solver: 1-moving least square fitting; 2-global regularization; 3-ADMM iterations
@@ -50,9 +50,9 @@ outlrThres = 5;          % Threshold for removing outliers in TPT (Westerweel et
 maxIterNum = 20;         % Max ADMM iteration number
 iterStopThres = 1e-2;    % ADMM iteration stopping threshold
 usePrevResults = 0;      % Whether use previous results or not
-strain_f_o_s = 60;       % Size of virtual strain gauge
+strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
-BeadParaDistMissing = 2; % Distance threshold to check whether particle has a match or not
+BeadParaDistMissing = 2; % Distance threshold to check whether particle has a match or not [px]
 gridxyzROIRange.gridx = [min(parCoordA(:,1)),max(parCoordA(:,1))]; % ROI-gridx
 gridxyzROIRange.gridy = [min(parCoordA(:,2)),max(parCoordA(:,2))]; % ROI-gridy
 gridxyzROIRange.gridz = [min(parCoordA(:,3)),max(parCoordA(:,3))]; % ROI-gridz

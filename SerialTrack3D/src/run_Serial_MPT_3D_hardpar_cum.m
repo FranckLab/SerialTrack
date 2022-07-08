@@ -49,21 +49,23 @@ end
 disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
 
    
-%% ====== Detect particles ======
-%%%%% Particle detection parameters %%%%%
+%% ====== Detect and localize particles ======
+%%%%% Particle detection and localization parameters %%%%%
 %%%%% Bead Parameter %%%%%
+% BeadPara.detectionMethod = 2;   % Particle detection method: 1 = TPT (blob finding + radial projection), 
+%                                                              2 = TracTrac (LoG blob finding + lsq fit of gaussian)
 % BeadPara.thres = 0.4;           % Threshold for detecting particles
-% BeadPara.beadSize = 0;          % Estimated radius of a single particle
-% BeadPara.minSize = 2;           % Minimum radius of a single particle
-% BeadPara.maxSize = 1000;        % Maximum radius of a single particle
-% BeadPara.winSize = [5, 5, 5];   % By default
-% BeadPara.dccd = [1,1,1];        % By default
-% BeadPara.abc = [1,1,1];         % By default
-% BeadPara.forloop = 1;           % By default
-% BeadPara.randNoise = 1e-7;      % By default
+% BeadPara.beadSize = 0;          % Estimated radius of a single particle [px]
+% BeadPara.minSize = 2;           % Minimum area of a single particle [px^2]
+% BeadPara.maxSize = 1000;        % Maximum area of a single particle [px^2]
+% BeadPara.winSize = [5, 5, 5];   % Default [not currently used]
+% BeadPara.dccd = [1,1,1];        % Default [not currently used]
+% BeadPara.abc = [1,1,1];         % Default [not currently used]
+% BeadPara.forloop = 1;           % Default [not currently used]
+% BeadPara.randNoise = 1e-7;      % Default [not currently used]
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not 
-% BeadPara.color = 'white';       % By default
+% BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not [px]
+% BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ImgSeqNum = 1; % First reference image
@@ -108,7 +110,7 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 
 %% %%%%% Initialization %%%%%
 %%%%% MPT Parameter %%%%%
-% MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|)
+% MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|) [px]
 % MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 % MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles
 % MPTPara.gbSolver = 2;            % Global step solver: 1-moving least square fitting; 2-global regularization; 3-ADMM iterations
@@ -117,7 +119,7 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 % MPTPara.maxIterNum = 20;         % Max ADMM iteration number
 % MPTPara.iterStopThres = 1e-2;    % ADMM iteration stopping threshold
 % MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
-% MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge
+% MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 % MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;
 
 %%%%%% To store results %%%%%
@@ -165,12 +167,13 @@ end
 fig=figure; ax=axes; hold on; plot(defList,track_ratio,'r^-.','linewidth',1);
 adjust_fig(fig,ax,'','',''); box on; title('');
 xlabel('Frame #'); ylabel('Tracking ratio');
-axis([2,length(file_name),0,1]);
+try axis([2,length(file_name),0,1]); catch; end
 
 %%%%% Save results %%%%%
 disp('%%%%%% SerialTrack 3D hard particle tracking: Done! %%%%%%'); fprintf('\n');
 results_file_name = 'results_3D_hardpar.mat';
-save(results_file_name,'parCoord_prev','uvw_B2A_prev','resultDisp','resultDefGrad','track_A2B_prev');
+mkdir results
+save(['./results/' results_file_name],'parCoord_prev','uvw_B2A_prev','resultDisp','resultDefGrad','track_A2B_prev');
  
 
 
@@ -183,6 +186,8 @@ disp('%%%%% Plot tracked cumulative deformations %%%%%'); fprintf('\n');
 
 %%%%% Experimental parameters %%%%%
 try xstep = MPTPara.xstep; catch, xstep = 1; end % unit: um/px
+try ystep = MPTPara.ystep; catch, ystep = xstep; end
+try zstep = MPTPara.zstep; catch, zstep = xstep; end
 try tstep = MPTPara.tstep; catch, tstep = 1; end % unit: us  
  
 %%%%% Plot tracked incremental displacement field %%%%%
@@ -196,14 +201,14 @@ for ImgSeqNum = 2:length(file_name)
     parCoordB = parCoord_prev{ImgSeqNum};
 
     %%%%% Plot displacements %%%%%
-    clf, plotCone3(parCoordB(:,1)*xstep,parCoordB(:,2)*xstep,parCoordB(:,3)*xstep, ...
-        disp_A2B_parCoordB(:,1)*xstep ,disp_A2B_parCoordB(:,2)*xstep ,disp_A2B_parCoordB(:,3)*xstep  );
+    clf, plotCone3(parCoordB(:,1)*xstep,parCoordB(:,2)*ystep,parCoordB(:,3)*zstep, ...
+        disp_A2B_parCoordB(:,1)*xstep ,disp_A2B_parCoordB(:,2)*ystep ,disp_A2B_parCoordB(:,3)*zstep  );
     set(gca,'fontsize',18); view(3); box on; axis equal; axis tight;  
     title(['Tracked cumulative displacement (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y'); zlabel('z');
-    axis(xstep*[MPTPara.gridxyzROIRange.gridx(1), MPTPara.gridxyzROIRange.gridx(2), ...
-          MPTPara.gridxyzROIRange.gridy(1), MPTPara.gridxyzROIRange.gridy(2), ...
-          MPTPara.gridxyzROIRange.gridz(1), MPTPara.gridxyzROIRange.gridz(2)]);
+    axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
+          ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
+          zstep*MPTPara.gridxyzROIRange.gridz(1), zstep*MPTPara.gridxyzROIRange.gridz(2)]);
     
     frame = getframe(gcf);
     writeVideo(v,frame);
@@ -260,17 +265,20 @@ end
 set(gca,'fontsize',18); view(3); box on; axis equal; axis tight;  
 title('Tracked particle trajectory','fontweight','normal');
 xlabel('x'); ylabel('y'); zlabel('z');
-axis(xstep*[MPTPara.gridxyzROIRange.gridx(1), MPTPara.gridxyzROIRange.gridx(2), ...
-      MPTPara.gridxyzROIRange.gridy(1), MPTPara.gridxyzROIRange.gridy(2), ...
-      MPTPara.gridxyzROIRange.gridz(1), MPTPara.gridxyzROIRange.gridz(2)]);
+axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
+      ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
+      zstep*MPTPara.gridxyzROIRange.gridz(1), zstep*MPTPara.gridxyzROIRange.gridz(2)]);
 
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('Press "Ctrl + C" to modify codes below to plot interpolated displacements and strains on a uniform grid mesh');
+disp(['Press "Ctrl + C" to modify codes below to plot interpolated ...' ...
+      'displacements and strains on a uniform grid mesh']);
+disp(['Press "Enter" key to keep running the code']);
 pause; 
 
-ImgSeqNum = 2; % Frame #
+
+ImgSeqNum = 2; % TODO: assign a Frame #
  
 
 %%%%% Previously tracked displacement field %%%%%
@@ -301,23 +309,37 @@ uvw_Grid_refB_Vector=[u_Grid_refB(:),v_Grid_refB(:),w_Grid_refB(:)]'; uvw_Grid_r
 D_Grid = funDerivativeOp3(size(x_Grid_refB,1),size(x_Grid_refB,2),size(x_Grid_refB,3),sxyz); % Central finite difference operator
 F_Grid_refB_Vector=D_Grid*uvw_Grid_refB_Vector; % {F}={D}{U}
 
+% Change "uvw_Grid_refB_Vector" and "F_Grid_refB_Vector" in physical world units
+uvw_Grid_refB_Vector_PhysWorld = [u_Grid_refB(:)*xstep,v_Grid_refB(:)*ystep,w_Grid_refB(:)*zstep]';
+uvw_Grid_refB_Vector_PhysWorld = uvw_Grid_refB_Vector_PhysWorld(:);
+
+F_Grid_refB_Vector_PhysWorld = [F_Grid_refB_Vector(1:9:end), ...             % F11
+                                F_Grid_refB_Vector(2:9:end)*ystep/xstep, ... % F21
+                                F_Grid_refB_Vector(3:9:end)*zstep/xstep, ... % F31
+                                F_Grid_refB_Vector(4:9:end)*xstep/ystep, ... % F12
+                                F_Grid_refB_Vector(5:9:end), ...             % F22
+                                F_Grid_refB_Vector(6:9:end)*zstep/ystep, ... % F32
+                                F_Grid_refB_Vector(7:9:end)*xstep/zstep, ... % F13
+                                F_Grid_refB_Vector(8:9:end)*ystep/zstep, ... % F23
+                                F_Grid_refB_Vector(9:9:end)]';               % F33
+F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 
 %%%%% Cone plot grid data: displecement %%%%%
-figure, plotCone3(x_Grid_refB*xstep,y_Grid_refB*xstep,z_Grid_refB*xstep,u_Grid_refB*xstep,v_Grid_refB*xstep,w_Grid_refB*xstep);
+figure, plotCone3(x_Grid_refB*xstep,y_Grid_refB*ystep,z_Grid_refB*zstep,u_Grid_refB*xstep,v_Grid_refB*ystep,w_Grid_refB*zstep);
 set(gca,'fontsize',18); view(3); box on; axis equal; axis tight;  
 title('Tracked cumulative displacement','fontweight','normal');
-axis(xstep*[MPTPara.gridxyzROIRange.gridx(1), MPTPara.gridxyzROIRange.gridx(2), ...
-          MPTPara.gridxyzROIRange.gridy(1), MPTPara.gridxyzROIRange.gridy(2), ...
-          MPTPara.gridxyzROIRange.gridz(1), MPTPara.gridxyzROIRange.gridz(2)]);
+axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
+      ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
+      zstep*MPTPara.gridxyzROIRange.gridz(1), zstep*MPTPara.gridxyzROIRange.gridz(2)]);
 
 %%%%% Generate an FE-mesh %%%%%
-[coordinatesFEM_refB,elementsFEM_refB] = funMeshSetUp3(x_Grid_refB*xstep,y_Grid_refB*xstep,z_Grid_refB*xstep);
+[coordinatesFEM_refB,elementsFEM_refB] = funMeshSetUp3(x_Grid_refB*xstep,y_Grid_refB*ystep,z_Grid_refB*zstep);
 
 %%%%% Cone plot grid data: displacement %%%%%
-Plotdisp_show3(uvw_Grid_refB_Vector*xstep, coordinatesFEM_refB*xstep, elementsFEM_refB,[],'NoEdgeColor');
+Plotdisp_show3(uvw_Grid_refB_Vector_PhysWorld, coordinatesFEM_refB*diag([xstep,ystep,zstep]), elementsFEM_refB,[],'NoEdgeColor');
  
 %%%%% Cone plot grid data: infinitesimal strain %%%%%
-Plotstrain_show3(F_Grid_refB_Vector, coordinatesFEM_refB*xstep, elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
+Plotstrain_show3(F_Grid_refB_Vector_PhysWorld, coordinatesFEM_refB*diag([xstep,ystep,zstep]), elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
  
 
  

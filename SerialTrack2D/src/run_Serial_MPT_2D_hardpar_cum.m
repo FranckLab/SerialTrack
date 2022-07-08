@@ -236,15 +236,18 @@ for ImgSeqNum = 2 : length(Img)
 end
  
 fig=figure; ax=axes; hold on; plot(defList,track_ratio,'r^-.','linewidth',1);
-adjust_fig(fig,ax,'','',''); box on; title('');
-xlabel('Frame #'); ylabel('Tracking ratio');
-axis([2,length(Img),0,1]);
+set(gcf,'color','w'); box on; set(gca,'fontsize',18); 
+% adjust_fig(fig,ax,'','','');
+title('Tracking ratio','fontweight','normal');  
+xlabel('Frame #'); % ylabel('Tracking ratio');
+try axis([2,length(Img),0,1]); catch; end
 
 
 %%%%% Save results %%%%%
-disp('%%%%%% ALTPT hard particle tracking: Done! %%%%%%'); fprintf('\n');
+disp('%%%%% SerialTrack hard particle tracking: Done! %%%%%'); fprintf('\n');
 results_file_name = 'results_2D_hardpar.mat';
-save(results_file_name,'parCoord_prev','uv_B2A_prev','resultDisp','resultDefGrad','track_A2B_prev');
+mkdir results
+save(['./results/' results_file_name],'parCoord_prev','uv_B2A_prev','resultDisp','resultDefGrad','track_A2B_prev');
  
 
 
@@ -257,6 +260,7 @@ disp('%%%%% Plot tracked cumulative deformations %%%%%'); fprintf('\n');
 
 %%%%% Experimental parameters %%%%%
 try xstep = MPTPara.xstep; catch, xstep = 1; end % unit: um/px
+try ystep = MPTPara.ystep; catch, ystep = xstep; end
 try tstep = MPTPara.tstep; catch, tstep = 1; end % unit: us  
  
 %%%%% Plot tracked incremental displacement field %%%%%
@@ -270,7 +274,7 @@ for ImgSeqNum = 2:length(Img) % ImgSeqNum: Frame #
     parCoordB = parCoord_prev{ImgSeqNum};
 
     %%%%% Plot displacements %%%%%
-    clf, plotCone2(parCoordB(:,1)*xstep,parCoordB(:,2)*xstep,disp_A2B_parCoordB(:,1)*xstep ,disp_A2B_parCoordB(:,2)*xstep );
+    clf, plotCone2(parCoordB(:,1)*xstep,parCoordB(:,2)*ystep,disp_A2B_parCoordB(:,1)*xstep ,disp_A2B_parCoordB(:,2)*ystep );
     set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
     title(['Tracked cumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y');
@@ -286,6 +290,9 @@ close(v);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% %%%%% Compute trajectory %%%%%
+if size(parCoord_prev,1) > 1  % Only for multiple frames
+
+disp('%%%%% Merge tracked trajectory segments %%%%%'); fprintf('\n');
 
 %%%%% Initialization %%%%%
 resultDispCurr = resultDisp{1}; 
@@ -319,13 +326,13 @@ for parInd = 1:size(parCoordA,1)
         wayPoints = parCoordATraj{parInd}; 
         if length(wayPoints(isnan(wayPoints(:,1))==1,1)) < 3
             if (size(resultDisp,1)+1)<4
-                hold on; line(xstep*wayPoints(isnan(wayPoints(:,1))<1,1),xstep*wayPoints(isnan(wayPoints(:,1))<1,2),'linewidth',1.2); view(3); % straight lines
+                hold on; line(xstep*wayPoints(isnan(wayPoints(:,1))<1,1),ystep*wayPoints(isnan(wayPoints(:,1))<1,2),'linewidth',1.2); view(3); % straight lines
             else
-                hold on; fnplt(cscvn(xstep*wayPoints(isnan(wayPoints(:,1))<1,:)'),'',1.);
+                hold on; fnplt(cscvn(diag([xstep,ystep])*wayPoints(isnan(wayPoints(:,1))<1,:)'),'',1.);
             end
         end
         % if sum(1-isnan(wayPoints(:,1)))>1 % Don't show if there is only one point on the trajectory
-        %     hold on; plot(xstep*wayPoints(:,1),xstep*wayPoints(:,2),'.','markersize',5);
+        %     hold on; plot(xstep*wayPoints(:,1),ystep*wayPoints(:,2),'.','markersize',5);
         % end
     catch
     end
@@ -337,13 +344,18 @@ set(gca,'YDir','reverse'); xlabel('x'); ylabel('y');
 axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ...
             MPTPara.gridxyROIRange.gridy(1), MPTPara.gridxyROIRange.gridy(2) ]);
 
+end    % End of if:  Only work for multiple frames
+
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('Press "Ctrl + C" and modify codes below to plot interpolated displacements and strains on a uniform grid mesh');
+disp(['Press "Ctrl + C" and modify codes below to plot interpolated ' ...
+      'displacements and strains on a uniform grid mesh']);
+disp(['Press "Enter" key to keep running the code']);
 pause; 
 
-ImgSeqNum = 2; % TODO: Frame #
+
+ImgSeqNum = 2; % TODO: assign a Frame #
 
 
 %%%%% Previously tracked displacement field %%%%%
@@ -361,29 +373,40 @@ smoothness = 1e-3; % Smoothness for regularization; "smoothness=0" means no regu
 
 % Apply ROI image mask
 [u_Grid_refB, v_Grid_refB] = funRmROIOutside(x_Grid_refB,y_Grid_refB,MPTPara.ImgRefMask,u_Grid_refB,v_Grid_refB);
+
 % Build a displacement vector
 uv_Grid_refB_Vector=[u_Grid_refB(:),v_Grid_refB(:)]'; uv_Grid_refB_Vector=uv_Grid_refB_Vector(:);
+
 % Calculate deformation gradient
 D_Grid = funDerivativeOp(size(x_Grid_refB,1),size(x_Grid_refB,2),mean(sxy)); % Central finite difference operator
 F_Grid_refB_Vector=D_Grid*uv_Grid_refB_Vector; % {F}={D}{U}
 
+% Change "uv_Grid_refB_Vector" and "F_Grid_refB_Vector" in physical world units
+uv_Grid_refB_Vector_PhysWorld = [u_Grid_refB(:)*xstep,v_Grid_refB(:)*ystep]';
+uv_Grid_refB_Vector_PhysWorld = uv_Grid_refB_Vector_PhysWorld(:);
+
+F_Grid_refB_Vector_PhysWorld = [F_Grid_refB_Vector(1:4:end), ...             % F11
+                                F_Grid_refB_Vector(2:4:end)*ystep/xstep, ... % F21
+                                F_Grid_refB_Vector(3:4:end)*xstep/ystep, ... % F12
+                                F_Grid_refB_Vector(4:4:end)]';               % F22
+F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 
 %%%%% Cone plot grid data: displecement %%%%%
-figure, plotCone2(x_Grid_refB*xstep,y_Grid_refB*xstep,u_Grid_refB*xstep,v_Grid_refB*xstep );
+figure, plotCone2(x_Grid_refB*xstep,y_Grid_refB*ystep,u_Grid_refB*xstep,v_Grid_refB*ystep );
 set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-title('Tracked incremental displacement','fontweight','normal');
-axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ...
-      MPTPara.gridxyROIRange.gridy(1), MPTPara.gridxyROIRange.gridy(2) ]);
+title('Tracked displacement','fontweight','normal');
+axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(2), ...
+      ystep*MPTPara.gridxyROIRange.gridy(1), ystep*MPTPara.gridxyROIRange.gridy(2) ]);
   
 
 %%%%% Generate an FE-mesh %%%%%
-[coordinatesFEM_refB,elementsFEM_refB] = funMeshSetUp(x_Grid_refB*xstep,y_Grid_refB*xstep);
+[coordinatesFEM_refB,elementsFEM_refB] = funMeshSetUp(x_Grid_refB*xstep,y_Grid_refB*ystep);
 
 %%%%% Cone plot grid data: displacement %%%%%
-Plotdisp_show(uv_Grid_refB_Vector*xstep, coordinatesFEM_refB*xstep, elementsFEM_refB,[],'NoEdgeColor');
+Plotdisp_show(uv_Grid_refB_Vector_PhysWorld, coordinatesFEM_refB, elementsFEM_refB,[],'NoEdgeColor');
  
 %%%%% Cone plot grid data: infinitesimal strain %%%%%
-Plotstrain_show(F_Grid_refB_Vector, coordinatesFEM_refB*xstep, elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
+Plotstrain_show(F_Grid_refB_Vector_PhysWorld, coordinatesFEM_refB, elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
  
 
  

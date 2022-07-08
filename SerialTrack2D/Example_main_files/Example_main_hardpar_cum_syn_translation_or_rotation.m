@@ -5,11 +5,11 @@
 % Particle rigidity:    hard 
 % Tracking mode:        cumulative
 % Syn or Exp:           syn
-% Deformation mode:     rigid body motions including translations & rotations
+% Deformation mode:     rigid body motions:\subs translations & rotations
 %
 % ===================================================
 % Author: Jin Yang, Ph.D.
-% Email: jyang526@wisc.edu -or-  aldicdvc@gmail.com 
+% Email: jyang526@wisc.edu -or- aldicdvc@gmail.com 
 % Date: 02/2022
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -21,7 +21,7 @@ disp('************************************************');
 addpath( './function/','./src/'); 
 
  
-%% user defined parameters %%%%%
+%% User defined parameters %%%%%
 
 %%%%% Problem dimension and units %%%%%
 MPTPara.DIM = 2;   % problem dimension
@@ -45,12 +45,12 @@ disp('************************************************'); fprintf('\n');
 
 %%%%% Image binary mask file %%%%%
 MaskFileLoadingMode = 0; % {0: No mask file
-                         %  1: loading only one mask file for all frames; 
-                         %  2: loading one mask file for each single frame;
-                         %  3: loading matlab mat file for all frames}
+                         %  1: Load only one mask file for all frames; 
+                         %  2: Load one mask file for each single frame;
+                         %  3: Load a MATLAB mat file for all frames;
 
 if MaskFileLoadingMode == 3
-    im_roi_mask_file_path = '.\img_par2track_lung\im_roi.mat';  % TODO: Path for the loaded MATLAB mat file as the mask file
+    im_roi_mask_file_path = '.\img_par2track_lung\im_roi.mat';  % TODO: Path of the mat file to be used as the mask file
 else
     im_roi_mask_file_path = '';  % If there is no mask mat file, leave it as empty;
 end
@@ -93,7 +93,7 @@ MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-
 distThres = 1;           % distance threshold to connect split trajectory segments
 extrapMethod = 'pchip';  % extrapolation scheme to connect split trajectory segments
                          % suggestion: 'nearest' for Brownian motion                          
-minTrajSegLength = 0;    % the minimum length of trajectory segment that will be extrapolate 
+minTrajSegLength = 0;    % the minimum length of trajectory segment that will be extrapolated 
 maxGapTrajSeqLength = 0; % the max frame# gap between connected trajectory segments
 
 

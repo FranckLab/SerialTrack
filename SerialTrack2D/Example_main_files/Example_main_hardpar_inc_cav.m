@@ -30,7 +30,7 @@ MPTPara.tstep = 1;   % unit: 1/frame
 
 %%%%% Code mode %%%%%
 MPTPara.mode = 'inc'; % {'inc': incremental mode; 
-                      %  'cum': cumulative mode; 
+                      %  'accum': accumulative mode; 
                       %  'dbf': double frame}
 
 MPTPara.parType = 'hard'; % {'hard': hard particle; 
@@ -91,15 +91,15 @@ MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-
 distThres = 1;           % distance threshold to connect split trajectory segments
 extrapMethod = 'pchip';  % extrapolation scheme to connect split trajectory segments
                          % suggestion: 'nearest' for Brownian motion                          
-minTrajSegLength = 10;   % the minimum length of trajectory segment that will be extrapolate 
+minTrajSegLength = 10;   % the minimum length of trajectory segment that will be extrapolated 
 maxGapTrajSeqLength = 0; % the max frame# gap between connected trajectory segments
 
 
 %%%%% Execute SerialTrack particle tracking %%%%%
 if strcmp(MPTPara.mode,'inc')==1
     run_Serial_MPT_2D_hardpar_inc;
-elseif strcmp(MPTPara.mode,'cum')==1
-    run_Serial_MPT_2D_hardpar_cum;    
+elseif strcmp(MPTPara.mode,'accum')==1
+    run_Serial_MPT_2D_hardpar_accum;    
 elseif strcmp(MPTPara.mode,'dbf')==1
     run_Serial_MPT_2D_hardpar_dbf;
 end

@@ -234,15 +234,18 @@ for ImgSeqNumHalf = 1 : length(Img)/2
 end
  
 fig=figure; ax=axes; hold on; plot(defList,track_ratio,'r^-.','linewidth',1);
-adjust_fig(fig,ax,'','',''); box on; title('');
-xlabel('Frame #'); ylabel('Incremental tracking ratio');
-axis([2,length(file_name)/2,0,1]);
+set(gcf,'color','w'); box on; set(gca,'fontsize',18); 
+% adjust_fig(fig,ax,'','','');
+title('Tracking ratio','fontweight','normal');  
+xlabel('Frame #'); % ylabel('Incremental tracking ratio');
+try axis([2,length(file_name)/2,0,1]); catch; end
 
 
 %%%%% Save results %%%%%
 disp('%%%%%% ALTPT hard particle tracking: Done! %%%%%%'); fprintf('\n');
 results_file_name = 'results_hardpar.mat';
-save(results_file_name,'parCoord_prev','uv_B2A_prev','track_A2B_prev','track_B2A_prev');
+mkdir results
+save(['./results/' results_file_name],'parCoord_prev','uv_B2A_prev','track_A2B_prev','track_B2A_prev');
  
 
 
@@ -255,8 +258,8 @@ disp('%%%%% Plot tracked incremental deformations %%%%%'); fprintf('\n');
 
 %%%%% Experimental parameters %%%%%
 try xstep = MPTPara.xstep; catch, xstep = 1; end % unit: um/px
+try ystep = MPTPara.ystep; catch ystep = xstep; end
 try tstep = MPTPara.tstep; catch, tstep = 1; end % unit: us  
-% ImgSeqNum  % Frame #
  
 %%%%% Plot tracked incremental displacement field %%%%%
 %%%%% Make a video %%%%%
@@ -269,7 +272,7 @@ for ImgSeqNumHalf = 1:length(Img)/2
     parCoordB = parCoord_prev{ImgSeqNumHalf*2};
 
     %%%%% Plot displacements %%%%%
-    clf, plotCone2(parCoordB(:,1)*xstep,parCoordB(:,2)*xstep,disp_A2B_parCoordB(:,1)*xstep/tstep,disp_A2B_parCoordB(:,2)*xstep/tstep );
+    clf, plotCone2(parCoordB(:,1)*xstep,parCoordB(:,2)*ystep,disp_A2B_parCoordB(:,1)*xstep/tstep,disp_A2B_parCoordB(:,2)*ystep/tstep );
     set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
     title(['Tracked velocity (#',num2str(2*ImgSeqNumHalf-1),'-',num2str(2*ImgSeqNumHalf),')'],'fontweight','normal');
     xlabel('x'); ylabel('y');
@@ -285,11 +288,13 @@ close(v);
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('Press "Ctrl + C" and modify codes below to plot interpolated displacements and strains on a uniform grid mesh');
+ddisp(['Press "Ctrl + C" and modify codes below to plot interpolated ' ...
+       'displacements and strains on a uniform grid mesh']);
+disp(['Press "Enter" key to keep running the code']);
 pause; 
 
 
-ImgSeqNum = 2; % Frame #
+ImgSeqNum = 2; % TODO: assign a Frame #
 ImgSeqNumHalf = ceil(ImgSeqNum/2);
 
 %%%%% Previously tracked displacement field %%%%%
@@ -305,31 +310,43 @@ smoothness = 1e-3; % Smoothness for regularization; "smoothness=0" means no regu
 
 % Apply ROI image mask
 [u_Grid_refB, v_Grid_refB] = funRmROIOutside(x_Grid_refB,y_Grid_refB,MPTPara.ImgRefMask,u_Grid_refB,v_Grid_refB);
+
 % Build a displacement vector
 uv_Grid_refB_Vector=[u_Grid_refB(:),v_Grid_refB(:)]'; uv_Grid_refB_Vector=uv_Grid_refB_Vector(:);
+
 % Calculate deformation gradient
 D_Grid = funDerivativeOp(size(x_Grid_refB,1),size(x_Grid_refB,2),mean(sxy)); % Central finite difference operator
 F_Grid_refB_Vector=D_Grid*uv_Grid_refB_Vector; % {F}={D}{U}
 
+% Change "uv_Grid_refB_Vector" and "F_Grid_refB_Vector" in physical world units
+uv_Grid_refB_Vector_PhysWorld = [u_Grid_refB(:)*xstep,v_Grid_refB(:)*ystep]';
+uv_Grid_refB_Vector_PhysWorld = uv_Grid_refB_Vector_PhysWorld(:);
+
+F_Grid_refB_Vector_PhysWorld = [F_Grid_refB_Vector(1:4:end), ...             % F11
+                                F_Grid_refB_Vector(2:4:end)*ystep/xstep, ... % F21
+                                F_Grid_refB_Vector(3:4:end)*xstep/ystep, ... % F12
+                                F_Grid_refB_Vector(4:4:end)]';               % F22
+F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 
 %%%%% Cone plot grid data: displecement %%%%%
-figure, plotCone2(xstep*x_Grid_refB,xstep*y_Grid_refB,u_Grid_refB*xstep ,v_Grid_refB*xstep );
+figure, plotCone2(xstep*x_Grid_refB,ystep*y_Grid_refB,u_Grid_refB*xstep ,v_Grid_refB*ystep );
 set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-title('Tracked cumulative displacement','fontweight','normal');
-axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ...
-      MPTPara.gridxyROIRange.gridy(1), MPTPara.gridxyROIRange.gridy(2) ]);
+title('Tracked accumulative displacement','fontweight','normal');
+axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(2), ...
+      ystep*MPTPara.gridxyROIRange.gridy(1), ystep*MPTPara.gridxyROIRange.gridy(2) ]);
 
   
 %%%%% Generate a FE-mesh %%%%%
-[coordinatesFEM_refB,elementsFEM_refB] = funMeshSetUp(x_Grid_refB*xstep,y_Grid_refB*xstep);
+[coordinatesFEM_refB,elementsFEM_refB] = funMeshSetUp(x_Grid_refB*xstep,y_Grid_refB*ystep);
 
 %%%%% Cone plot grid data: displacement %%%%%
-Plotdisp_show(uv_Grid_refB_Vector*xstep , coordinatesFEM_refB, elementsFEM_refB,[],'NoEdgeColor');
+Plotdisp_show(uv_Grid_refB_Vector_PhysWorld, coordinatesFEM_refB, elementsFEM_refB,[],'NoEdgeColor');
  
 %%%%% Cone plot grid data: infinitesimal strain %%%%%
-Plotstrain_show(F_Grid_refB_Vector, coordinatesFEM_refB, elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
-% Here "strain" means incremental displacement gradients
-disp('Here "strain" means incremental displacement gradients!');
+Plotstrain_show(F_Grid_refB_Vector_PhysWorld, coordinatesFEM_refB, elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
+
+% In "double frame (dbf) mode",  "strain" means incremental displacement gradients
+disp('In "double frame (dbf) mode", "strain" means incremental displacement gradients!');
 
  
 

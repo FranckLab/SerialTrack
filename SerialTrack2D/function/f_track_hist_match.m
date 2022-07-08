@@ -1,9 +1,14 @@
 function [ matches ] = f_track_hist_match( part_A, part_B, f_o_s, n_neighbours, gauss_interp )
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Histogram matching tracking method based on:
-% T.Fuchs, C.J. Kähler: "Volumetrische Messung wandnaher Strömungen"
-% Fachtagung "Experimentelle Strömungsmechanik"
+% T. Fuchs, C.J. KÃ¤hler: "Volumetrische Messung wandnaher StrÃ¶mungen"
+% Fachtagung "Experimentelle StrÃ¶mungsmechanik"
 % 5.-7. September 2017, Karlsruhe
+%
+% This file is a copy from:
+% T. Janke, R. Schwarze, K. Bauer: "Part2Track: A MATLAB package for double 
+% frame and time resolved Particle Tracking Velocimetry". vol 11, 100413, 
+% SoftwareX (2020). Link: https://github.com/Part2Track/Part2Track
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %   Input:      part_A        - coordinates of particles in image A [n x 4]

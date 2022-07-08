@@ -49,9 +49,11 @@ end
 disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
 
    
-%% ====== Detect particles ======
-%%%%% Particle detection parameters %%%%%
+%% ====== Detect and localize particles ======
+%%%%% Particle detection and localization parameters %%%%%
 %%%%% Bead Parameter %%%%%
+% BeadPara.detectionMethod = 2;   % Particle detection method: 1 = TPT (blob finding + radial projection), 
+%                                                              2 = TracTrac (LoG blob finding + lsq fit of gaussian)
 % BeadPara.thres = 0.4;           % Threshold for detecting particles
 % BeadPara.beadSize = 0;          % Estimated radius of a single particle [px]
 % BeadPara.minSize = 2;           % Minimum area of a single particle [px^2]

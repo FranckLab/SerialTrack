@@ -65,33 +65,37 @@ elseif strcmp(DefType,'simpleshear')==1
 else
 end
  
-%%%%% Bead detection method %%%%%
+
 BeadPara.detectionMethod = 1; % {1-deconvolution code; 2-regionprops}
 
 %%%%% Image binary mask file %%%%%
 im_roi_mask_file_path = ''; % TODO: leave it as empty if there is no mask file
 
 
-%%%%% Particle detection parameters %%%%%
-%%%%% Bead Parameter %%%%%
+%%%%% Particle detection and localization parameters %%%%%
+
+%%%%% Bead detection and localization method %%%%%
+BeadPara.detectionMethod = 1;   % Particle detection method: 1 = TPT (blob finding + radial projection), 
+%                                                            2 = TracTrac (LoG blob finding + lsq fit of gaussian)
+%%%%% Bead Parameters %%%%%
 BeadPara.thres = 0.5;           % Threshold for detecting particles
-BeadPara.beadSize = 3;          % Estimated radius of a single particle
-BeadPara.minSize = 4;           % Minimum radius of a single particle
-BeadPara.maxSize = 100;         % Maximum radius of a single particle
-BeadPara.winSize = [5,5,5];     % By default
-BeadPara.dccd = [1,1,1];        % By default
-BeadPara.abc = [1,1,1];         % By default
-BeadPara.forloop = 1;           % By default
-BeadPara.randNoise = 1e-7;      % By default
+BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
+BeadPara.minSize = 4;           % Minimum area of a single particle [px^2]
+BeadPara.maxSize = 100;         % Maximum area of a single particle [px^2]
+BeadPara.winSize = [5,5,5];     % Default window size for particle localization [used for method 1]
+BeadPara.dccd = [1,1,1];        % Default [used for method 1]
+BeadPara.abc = [1,1,1];         % Default [used for method 1]
+BeadPara.forloop = 1;           % Default [used for method 1]
+BeadPara.randNoise = 1e-7;      % Default [used for method 1]
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not 
-BeadPara.color = 'white';       % By default
+BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not [px]
+BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 
 %% SerialTrack particle tracking
 
 %%%%% Multiple particle tracking (MPT) Parameter %%%%%
-MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|)
+MPTPara.f_o_s = 60;              % Size of search field: max(|u|,|v|,|w|) [px]
 MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles
 MPTPara.gbSolver = 2;            % Global step solver: 1-moving least square fitting; 2-global regularization; 3-ADMM iterations
@@ -100,7 +104,7 @@ MPTPara.outlrThres = 5;          % Threshold for removing outliers in MPT
 MPTPara.maxIterNum = 20;         % Max ADMM iteration number
 MPTPara.iterStopThres = 1e-3;    % ADMM iteration stopping threshold
 MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
-MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge
+MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;  
 
 

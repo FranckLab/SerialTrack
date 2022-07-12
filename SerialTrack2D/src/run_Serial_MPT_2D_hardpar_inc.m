@@ -197,7 +197,17 @@ uv_B2A_prev = cell(length(Img)-1,1);
 
  
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
+track_ratio = nan*zeros(length(Img)-1,1);
+DefType = 'exp'; defList = [2:1:length(Img)]';
+fig_track_rat = figure; ax_TR = axes; hold on; plot(defList,track_ratio,'r^-.','linewidth',1);
+% adjust_fig(fig_track_rat,ax_TR,'','',''); box on; 
+title('Tracking ratio');
+xlabel('Frame #'); ylabel('Incremental tracking ratio');
+try axis([2,length(file_name),0,1]); catch, end
+drawnow
+
+plot_vectors = 0;
+for ImgSeqNum = 2:length(Img)  % "ImgSeqNum" is the frame index
     
     disp(['====== Frame #',num2str(ImgSeqNum),' ======']);
      
@@ -219,7 +229,7 @@ for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
     
     %%%%% SerialTrack particle tracking %%%%%
     [parCoordB_temp,uv_B2A_temp,~,~,track_A2B_temp,track_B2A_temp] = fun_SerialTrack_2D_HardPar( ...
-        ImgSeqNum,defImg,BeadPara,MPTPara,parCoord_prev{ImgSeqNum-1},parCoord_prev(2:end),uv_B2A_prev);
+        ImgSeqNum,defImg,BeadPara,MPTPara,parCoord_prev{ImgSeqNum-1},parCoord_prev(2:end),uv_B2A_prev,plot_vectors);
      
     %%%%% Store results %%%%%
     parCoord_prev{ImgSeqNum} = parCoordB_temp;
@@ -227,6 +237,13 @@ for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
     track_A2B_prev{ImgSeqNum-1} = track_A2B_temp;
     track_B2A_prev{ImgSeqNum-1} = track_B2A_temp;
      
+    
+    track_A2B = track_A2B_prev{ImgSeqNum-1}; 
+    track_ratio(ImgSeqNum-1) = length(track_A2B(track_A2B>0))/size(parCoord_prev{ImgSeqNum},1);
+    
+    plot(defList,track_ratio,'r^-.','linewidth',1);
+    drawnow
+    
 end
   
   
@@ -650,16 +667,3 @@ Plotdisp_show(uv_Grid_refB_Vector_PhysWorld , coordinatesFEM_refB, elementsFEM_r
  
 %%%%% Cone plot grid data: infinitesimal strain %%%%%
 Plotstrain_show(F_Grid_refB_Vector_PhysWorld, coordinatesFEM_refB, elementsFEM_refB,[],'NoEdgeColor',xstep,tstep);
- 
-
- 
-
-
-
-
-
-
-
-
-
-

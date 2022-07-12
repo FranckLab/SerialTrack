@@ -153,7 +153,7 @@ while iterNum < maxIterNum
             disp( ['Tracking ratio: ', num2str( size(matches_A2B,1) ),'/', num2str(length(parNotMissingIndA)), ' = ', num2str(matchRatio) ]);
         end
     end
-    if isempty(matches_A2B)==1, disp('Wrong parameters!'); break; end
+    if isempty(matches_A2B)==1, disp('No matches found!'); break; end
     
     
     

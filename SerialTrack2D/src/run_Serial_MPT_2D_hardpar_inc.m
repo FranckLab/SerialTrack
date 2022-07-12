@@ -121,16 +121,17 @@ end
  
 %%%%% Pre-process bead image if bead color is black %%%%%
 if strcmp(BeadPara.color,'black')
-    ImgGauss = imgaussfilt(imgaussfilt(currImg,1),1); % figure, imshow(uint16(ImgGauss));
-    ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
-    bw = imbinarize(uint16(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8); % figure, imshow(bws2);
-    bws2 = bwareaopen(bw,round(pi*BeadPara.minSize^2)); % remove all object containing fewer than BeadPara.minSize
-    removeobjradius = BeadPara.minSize; % fill a gaps in particles
-    se = strel('disk',removeobjradius);
-    bws2 = imclose(bws2,se);
-    currImg2 = double(bws2); % figure, imshow(uint8(currImg2));
+%     ImgGauss = imgaussfilt(imgaussfilt(currImg,1),1); % figure, imshow(uint16(ImgGauss));
+%     ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
+%     bw = imbinarize(uint16(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8); % figure, imshow(bws2);
+%     bws2 = bwareaopen(bw,BeadPara.minSize); % remove all object containing fewer than BeadPara.minSize
+%     removeobjradius = sqrt(BeadPara.minSize/pi); % fill a gaps in particles
+%     se = strel('disk',round(removeobjradius));
+%     bws2 = imclose(bws2,se);
+    currImg_norm = double(currImg)/max(double(currImg(:)));
+    currImg2_norm = imcomplement(currImg_norm); % figure, imshow(uint8(currImg2));
 else
-    currImg2 = currImg;
+    currImg2_norm = double(currImg)/max(double(currImg(:)));
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -141,7 +142,13 @@ end
 % x{1}{ImgSeqNum} = radial2center(double(currImg2)/max(double(currImg2(:))),x{1}{ImgSeqNum},BeadPara); % Localize particles
 % ----------------------------
 %%%%% Method 2: LoG operator (modified TracTrac code) %%%%%
-x{1}{ImgSeqNum} = f_detect_particles(double(currImg2)/max(double(currImg2(:))),BeadPara); 
+
+%pre-process to get threshold and size values
+BeadPara = funGetBeadPara(BeadPara,currImg2_norm);
+
+%run the particle detection and localization
+x{1}{ImgSeqNum} = f_detect_particles(currImg2_norm,BeadPara); 
+
 % ----------------------------
 %%%%% Method 3: sift code %%%%%
 % [~,descriptors,locs] = sift(currImg2);

@@ -64,21 +64,22 @@ end
 
 %%%%% Pre-process bead image if bead color is "black" %%%%%
 if strcmp(BeadPara.color,'black')
-    ImgGauss = imgaussfilt(imgaussfilt(currImg,1),1);
-    ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
-    bw = imbinarize(uint8(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8); % figure, imshow(bws2);
-    bws2 = bwareaopen(bw,round(pi*BeadPara.minSize^2)); % remove all object containing fewer than BeadPara.minSize
-    removeobjradius = BeadPara.minSize; % fill a gap in the pen's cap
-    se = strel('disk',removeobjradius);
-    bws2 = imclose(bws2,se);
-    currImg2 = double(bws2); % figure, imshow(uint8(ImgGauss));
+%     ImgGauss = imgaussfilt(imgaussfilt(currImg,1),1);
+%     ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
+%     bw = imbinarize(uint8(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8); % figure, imshow(bws2);
+%     bws2 = bwareaopen(bw,round(pi*BeadPara.minSize^2)); % remove all object containing fewer than BeadPara.minSize
+%     removeobjradius = BeadPara.minSize; % fill a gap in the pen's cap
+%     se = strel('disk',removeobjradius);
+%     bws2 = imclose(bws2,se);
+    currImg_norm = double(currImg)/max(double(currImg(:)));
+    currImg2_norm = imcomplement(currImg_norm); % figure, imshow(uint8(currImg2));
 else
-    currImg2 = currImg;
+    currImg2_norm = double(currImg)/max(double(currImg(:)));
 end
 
 
 %%%%% Detect particles %%%%%
-x{1}{ImgSeqNum} = f_detect_particles(double(currImg2)/max(double(currImg2(:))),BeadPara);
+x{1}{ImgSeqNum} = f_detect_particles(currImg2_norm,BeadPara);
 
 % Add MPTPara.gridxyROIRange left-bottom corner point coordinates
 x{1}{ImgSeqNum} = x{1}{ImgSeqNum} + [MPTPara.gridxyROIRange.gridx(1)-1, MPTPara.gridxyROIRange.gridy(1)-1];

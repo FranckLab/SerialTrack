@@ -46,7 +46,7 @@ while YN == 0
         histogram(Img(Img~=0))
         drawnow
         f2 = figure;
-        imshow(Img,[]),colorbar,axis iamge
+        imshow(Img,[]),colorbar,axis image
         drawnow
         BeadPara.thres = input('Enter binarization threshold estimate from histogram: ');
     end

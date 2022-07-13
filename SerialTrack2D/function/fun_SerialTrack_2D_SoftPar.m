@@ -1,7 +1,7 @@
 function [xyGrid_prevCurr,uvGrid_B2A_refB_prevCurr,track_A2B,parCoordBCurr] = fun_SerialTrack_2D_SoftPar(...
     ImgSeqNum,defImg,BeadPara,MPTPara,parCoordA,xyGrid_prev,uvGrid_B2A_refB_prev)
-%FUNCTION fun_SerialTrack_2D_SoftPar  
-% Objective: to track 2D soft particle pairs 
+%FUNCTION fun_SerialTrack_2D_SoftPar
+% Objective: to track 2D soft particle pairs
 % -----------------------------------------------
 %
 %       Input variables         Physical meaning
@@ -46,7 +46,7 @@ function [xyGrid_prevCurr,uvGrid_B2A_refB_prevCurr,track_A2B,parCoordBCurr] = fu
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Initialize iteration %%%%%
-warning('off'); iterNum = 0; 
+warning('off'); iterNum = 0;
 
 try f_o_s = MPTPara.f_o_s;                   catch f_o_s = 20;              end   % Size of search field [px]
 try n_neighborsMax = MPTPara.n_neighborsMax; catch n_neighborsMax = 25;     end   % Max # of neighboring particles
@@ -57,11 +57,11 @@ try smoothness = MPTPara.smoothness;         catch smoothness = 1e-2;       end 
 try outlrThres = MPTPara.outlrThres;         catch outlrThres = 2;          end   % Threshold for removing outliers in TPT (Westerweel et al., Exp.Fluids, 2005)
 try maxIterNum = MPTPara.maxIterNum;         catch maxIterNum = 20;         end   % Max ADMM iteration number
 try iterStopThres = MPTPara.iterStopThres;   catch iterStopThres = 1e-2;    end   % ADMM iteration stopping threshold
-try usePrevResults = MPTPara.usePrevResults; catch usePrevResults = 0;      end   % Whether use previous results or not  
-try strain_n_neighbors = MPTPara.strain_n_neighbors; 
-                                             catch strain_n_neighbors = 20; end   % Size of virtual strain gauge [px]
+try usePrevResults = MPTPara.usePrevResults; catch usePrevResults = 0;      end   % Whether use previous results or not
+try strain_n_neighbors = MPTPara.strain_n_neighbors;
+catch strain_n_neighbors = 20; end   % Size of virtual strain gauge [px]
 try strain_f_o_s = MPTPara.strain_f_o_s;     catch strain_f_o_s = 50;       end   % # of neighboring particles used in strain gauge
-try gridxyROIRange = MPTPara.gridxyROIRange; 
+try gridxyROIRange = MPTPara.gridxyROIRange;
 catch
     gridxyROIRange.gridx = [min(parCoordA(:,1)),max(parCoordA(:,1))]; % ROI-gridx
     gridxyROIRange.gridy = [min(parCoordA(:,2)),max(parCoordA(:,2))]; % ROI-gridy
@@ -73,7 +73,7 @@ sxy = min([round(0.5*f_o_s),20])*[1,1];   % Grid size for regularization
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Load current deformed frame %%%%%
 currImg = defImg(MPTPara.gridxyROIRange.gridx(1):MPTPara.gridxyROIRange.gridx(2), ...
-                 MPTPara.gridxyROIRange.gridy(1):MPTPara.gridxyROIRange.gridy(2));
+    MPTPara.gridxyROIRange.gridy(1):MPTPara.gridxyROIRange.gridy(2));
 
 %%%%% If PSF is non-empty, perform deconvolution %%%%%
 if ~isempty(BeadPara.PSF)
@@ -81,11 +81,11 @@ if ~isempty(BeadPara.PSF)
     disp('----- Deconvolution frame #',num2str(ImgSeqNum),' ------');
 end
 
-%%%%% Initialize two grid meshes: "fine-mesh is the image pixel mesh" 
+%%%%% Initialize two grid meshes: "fine-mesh is the image pixel mesh"
 [xGrid_Img,yGrid_Img] = ndgrid( gridxyROIRange.gridx(1):gridxyROIRange.gridx(2), ...
-                                gridxyROIRange.gridy(1):gridxyROIRange.gridy(2) );
+    gridxyROIRange.gridy(1):gridxyROIRange.gridy(2) );
 [xGrid,yGrid] = ndgrid(gridxyROIRange.gridx(1) : sxy(1) : gridxyROIRange.gridx(2), ...
-                       gridxyROIRange.gridy(1) : sxy(2) : gridxyROIRange.gridy(2));
+    gridxyROIRange.gridy(1) : sxy(2) : gridxyROIRange.gridy(2));
 
 uGrid_B2A_refB = 0*xGrid; vGrid_B2A_refB = 0*xGrid;
 
@@ -139,7 +139,7 @@ while iterNum < maxIterNum
             row1234 = unique([row1;row2;row3;row4]);
             currImg(row1234) = nan;
             
-        end %%%%% END of if 
+        end %%%%% END of if
         
     elseif iterNum > 1
         
@@ -193,20 +193,20 @@ while iterNum < maxIterNum
     
     %%%%% Pre-process bead image if bead color is black %%%%%
     if strcmp(BeadPara.color,'black')
-        ImgGauss = imgaussfilt(imgaussfilt(currImg,1),1);
-        ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
-        bw = imbinarize(uint8(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8);
-        bws2 = bwareaopen(bw,round(pi*BeadPara.minSize^2)); % remove all object containing fewer than BeadPara.minSize
-        removeobjradius = BeadPara.minSize; % fill a gap in the pen's cap
-        se = strel('disk',removeobjradius);
-        bws2 = imclose(bws2,se);
-        currImg2 = double(bws2);
+        %     ImgGauss = imgaussfilt(imgaussfilt(currImg,1),1); % figure, imshow(uint16(ImgGauss));
+        %     ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
+        %     bw = imbinarize(uint16(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8); % figure, imshow(bws2);
+        %     bws2 = bwareaopen(bw,BeadPara.minSize); % remove all object containing fewer than BeadPara.minSize
+        %     removeobjradius = sqrt(BeadPara.minSize/pi); % fill a gaps in particles
+        %     se = strel('disk',round(removeobjradius));
+        %     bws2 = imclose(bws2,se);
+        currImg_norm = double(currImg)/max(double(currImg(:)));
+        currImg2_norm = imcomplement(currImg_norm); % figure, imshow(uint8(currImg2));
     else
-        currImg2 = currImg;
+        currImg2_norm = double(currImg)/max(double(currImg(:)));
     end
-    
     %%%%% Detect and localize particles %%%%%
-    x{1}{ImgSeqNum} = f_detect_particles(double(currImg2)/max(double(currImg2(:))),BeadPara);
+    x{1}{ImgSeqNum} = f_detect_particles(currImg2_norm,BeadPara);
     
     %%%%% Add back gridxyROIRange %%%%%
     x{1}{ImgSeqNum} = x{1}{ImgSeqNum} + [gridxyROIRange.gridx(1)-1, gridxyROIRange.gridy(1)-1];
@@ -222,7 +222,7 @@ while iterNum < maxIterNum
     %     parCoordBCurr(:,2)-(gridxyROIRange.gridy(1)-1), 'r.');
     % view(2); box on; axis equal; axis tight; set(gca,'fontsize',18);
     % title('Detected particles in ref image','fontweight','normal');
-    % 
+    %
     % pause;
     
     %%%%% Report detected beads # %%%%%
@@ -319,8 +319,8 @@ while iterNum < maxIterNum
         tempv = Fy(parCoordBCurr);
         
         
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%% Method II: global regularization %%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%% Method II: global regularization %%%%%
     elseif gbSolver==2
         
         tempUV_B2A = -u_A2B;
@@ -338,8 +338,8 @@ while iterNum < maxIterNum
         end
         
         
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%% Method III: augmented Lagrangian regularization %%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%% Method III: augmented Lagrangian regularization %%%%%
     elseif gbSolver==3
         
         tempUV_B2A = -u_A2B;
@@ -392,7 +392,7 @@ while iterNum < maxIterNum
         % figure, plot([1:5],ErrSum,'o-');
         
     end % END of "if gbSolver"
-     
+    
     
 end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -407,7 +407,7 @@ tempu = Fx(parCoordBCurr);
 Fy = scatteredInterpolant(xyGrid_prevCurr,vGrid_B2A_refB(:),'linear','linear');
 tempv = Fy(parCoordBCurr);
 parCoordBCurr = parCoordBCurr - [tempu(:),tempv(:)];
- 
+
 close all;
 figure,plotCone2(xGrid(:), yGrid(:), uGrid_B2A_refB(:), vGrid_B2A_refB(:)); view(2);
 set(gca,'fontsize',18); view(3); box on; axis equal; axis tight;  view(2);

@@ -1,6 +1,6 @@
 function [file_name,Img,TPTpara] = funReadImage2(varargin)
-%FUNCTION [file_name,Img,TPTpara] = ReadImage2(varargin)
-% MATLAB script: ReadImage.m
+%FUNCTION [file_name,Img,TPTpara] = funReadImage2(varargin)
+% MATLAB script: funReadImage2.m
 % ----------------------------------------------
 %   This script is to load DIC images 
 %   Images can be loaded by:
@@ -17,7 +17,7 @@ function [file_name,Img,TPTpara] = funReadImage2(varargin)
 % ----------------------------------------------
 % Author: Jin Yang.  
 % Contact and support: jyang526@wisc.edu -or- aldicdvc@gmail.com
-% Last time updated: 02/2020.
+% Last time updated: 07/2022, Alex Landauer 
 % ==============================================
 
 %%
@@ -103,25 +103,21 @@ end
 % Decide DIC subset parameters
 % Choose ZOI
 fprintf('\n');
-disp('--- Define ROI corner points at the top-left and the bottom-right ---')
-imshow( (imread(file_name{1}))); 
-title('Click top-left and the bottom-right corner points','fontweight','normal','fontsize',16);
+disp('--- Select ROI from the image, double click when done ---')
 
-gridx = zeros(1,2); gridy = zeros(1,2);
-[gridx(1), gridy(1)] = ginput(1);
-fprintf('Coordinates of top-left corner point are (%4.3f,%4.3f)\n',gridx(1), gridy(1))
+% title('Click top-left and the bottom-right corner points','fontweight','normal','fontsize',16);
 
-[gridx(2), gridy(2)] = ginput(1);
-fprintf('Coordinates of bottom-right corner point are (%4.3f,%4.3f)\n',gridx(2), gridy(2))
+%show figure for cropping
+[~,rect] = imcrop(imread(file_name{1}));
 
-gridxy.gridx = round(gridx); gridxy.gridy = round(gridy);
+% set up the gridxy variable
+gridxy.gridx(2) = round(rect(1)+rect(3));
+gridxy.gridx(1) = round(rect(1));
+gridxy.gridy(1) = round(rect(2));
+gridxy.gridy(2) = round(rect(2)+rect(4));
 
-%%%%% Modify gridxy to make sure it is within the image domain %%%%%
-if gridxy.gridx(1)<1, gridxy.gridx(1) = 1; end
-if gridxy.gridy(1)<1, gridxy.gridy(1) = 1; end
-if gridxy.gridx(2)>size(Img{1},1), gridxy.gridx(2) = size(Img{1},1); end
-if gridxy.gridy(2)>size(Img{1},2), gridxy.gridy(2) = size(Img{1},2); end
-
+fprintf('Coordinates of top-left corner point are (%4.3f,%4.3f)\n',gridxy.gridx(1), gridxy.gridy(1))
+fprintf('Coordinates of bottom-right corner point are (%4.3f,%4.3f)\n',gridxy.gridx(2), gridxy.gridy(2))
 
 %% Store TPTpara
 TPTpara.gridxyROIRange = gridxy;

@@ -62,7 +62,7 @@ end
 %%%%% Bead Parameters %%%%%
 BeadPara.thres = 0.3;           % Threshold for detecting particles
 BeadPara.beadSize = 0;          % Estimated radius of a single particle [px]
-BeadPara.minSize = 3;           % Minimum radius of a single particle [px]
+BeadPara.minSize = 3;           % Minimum area of a single particle [px^2]
 BeadPara.maxSize = 200;         % Maximum area of a single particle [px^2]
 BeadPara.winSize = [5, 5];      % Default [not used in 2D]
 BeadPara.dccd = [1,1];          % Default [not used in 2D]

@@ -17,7 +17,7 @@ function [file_name,Img,TPTpara] = funReadImage2(varargin)
 % ----------------------------------------------
 % Author: Jin Yang.  
 % Contact and support: jyang526@wisc.edu -or- aldicdvc@gmail.com
-% Last time updated: 02/2020. 
+% Last time updated: 02/2020 (Jin Yang);   07/2022 (Alex Landauer)
 % ==============================================
 
 %%

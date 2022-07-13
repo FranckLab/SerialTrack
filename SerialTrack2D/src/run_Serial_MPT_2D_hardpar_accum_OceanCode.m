@@ -159,27 +159,33 @@ end
  
 %%%%% Pre-process bead image if bead color is black %%%%%
 if strcmp(BeadPara.color,'black')
-    ImgGauss = imgaussfilt(imgaussfilt(currImg,1),1); % figure, imshow(uint16(ImgGauss));
-    ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
-    bw = imbinarize(uint16(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8); % figure, imshow(bws2);
-    bws2 = bwareaopen(bw,round(pi*BeadPara.minSize^2)); % remove all object containing fewer than BeadPara.minSize
-    removeobjradius = BeadPara.minSize; % fill a gap in the pen's cap
-    se = strel('disk',removeobjradius);
-    bws2 = imclose(bws2,se);
-    currImg2 = double(bws2); % figure, imshow(uint8(currImg2));
+%     ImgGauss = imgaussfilt(imgaussfilt(currImg,1),1); % figure, imshow(uint16(ImgGauss));
+%     ImgGauss(ImgGauss > BeadPara.thres*max(double(currImg(:)))) = 0;
+%     bw = imbinarize(uint16(ImgGauss),'adaptive','ForegroundPolarity','dark','Sensitivity',0.8); % figure, imshow(bws2);
+%     bws2 = bwareaopen(bw,BeadPara.minSize); % remove all object containing fewer than BeadPara.minSize
+%     removeobjradius = sqrt(BeadPara.minSize/pi); % fill a gaps in particles
+%     se = strel('disk',round(removeobjradius));
+%     bws2 = imclose(bws2,se);
+    currImg_norm = double(currImg)/max(double(currImg(:)));
+    currImg2_norm = imcomplement(currImg_norm); % figure, imshow(uint8(currImg2));
 else
-    currImg2 = currImg;
+    currImg2_norm = double(currImg)/max(double(currImg(:)));
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Several methods to detect particles %%%%%
+%%%%% Several methods to detect and localize particles %%%%%
 %%%%% Method 1: TPT code %%%%%
 % x{1}{ImgSeqNum} = locateBeads(double(currImg2)/max(double(currImg2(:))),BeadPara); % Detect particles
 % x{1}{ImgSeqNum} = radial2center(double(currImg2)/max(double(currImg2(:))),x{1}{ImgSeqNum},BeadPara); % Localize particles
 % ----------------------------
 %%%%% Method 2: LoG operator (modified TracTrac code) %%%%%
-x{1}{ImgSeqNum} = f_detect_particles(double(currImg2)/max(double(currImg2(:))),BeadPara);
+
+%pre-process to get threshold and size values
+BeadPara = funGetBeadPara(BeadPara,currImg2_norm);
+
+%run the particle detection and localization
+x{1}{ImgSeqNum} = f_detect_particles(currImg2_norm,BeadPara);
 % ----------------------------
 %%%%% Method 3: sift code %%%%%
 % % Not fully implemented yet
@@ -229,6 +235,16 @@ resultDisp = cell(length(Img)-1,1);         resultDefGrad = cell(length(Img)-1,1
  
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+track_ratio = nan*zeros(length(Img)-1,1);
+DefType = 'exp'; defList = [2:1:length(Img)]';
+fig_track_rat = figure; ax_TR = axes; hold on; plot(defList,track_ratio,'r^-.','linewidth',1);
+% adjust_fig(fig_track_rat,ax_TR,'','',''); box on; 
+title('Tracking ratio');
+xlabel('Frame #'); ylabel('Incremental tracking ratio');
+try axis([2,length(file_name),0,1]); catch, end
+drawnow
+
 for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
     
     disp(['====== Frame #',num2str(ImgSeqNum),' ======']);
@@ -259,7 +275,12 @@ for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
     track_A2B_prev{ImgSeqNum-1} = track_A2B_temp;
     resultDisp{ImgSeqNum-1} = resultDisp_temp;
     resultDefGrad{ImgSeqNum-1} = resultDefGrad_temp;
-      
+                
+    track_A2B = track_A2B_prev{ImgSeqNum-1}; 
+    track_ratio(ImgSeqNum-1) = length(track_A2B(track_A2B>0))/size(parCoord_prev{1},1);
+    
+    plot(defList,track_ratio,'r^-.','linewidth',1);
+    drawnow
 end
   
 

@@ -72,7 +72,6 @@ end
 % BeadPara.forloop = 1;           % Default (not used)
 % BeadPara.randNoise = 1e-7;      % Default (not used)
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 % BeadPara.color = 'black';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%% Pipe %%%%%%%%%%%%%
@@ -87,7 +86,6 @@ end
 % BeadPara.forloop = 1;           % Default (not used)
 % BeadPara.randNoise = 1e-7;      % Default (not used)
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 % BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -189,6 +187,7 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 % MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 % MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 % MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;
+% MPTPara.distMissing = 2;         % Distance threshold to check whether particle has a match or not [px]
 
 %%%%%% To store results %%%%%
 parCoord_prev = cell(length(Img)-1,1);      parCoord_prev{1} = parCoordA;
@@ -229,7 +228,7 @@ for ImgSeqNum = 2:length(Img)  % "ImgSeqNum" is the frame index
     
     %%%%% SerialTrack particle tracking %%%%%
     [parCoordB_temp,uv_B2A_temp,~,~,track_A2B_temp,track_B2A_temp] = fun_SerialTrack_2D_HardPar( ...
-        ImgSeqNum,defImg,BeadPara,MPTPara,parCoord_prev{ImgSeqNum-1},parCoord_prev(2:end),uv_B2A_prev,plot_vectors);
+        ImgSeqNum,defImg,BeadPara,MPTPara,parCoord_prev{ImgSeqNum-1},parCoord_prev(2:end),uv_B2A_prev);
      
     %%%%% Store results %%%%%
     parCoord_prev{ImgSeqNum} = parCoordB_temp;
@@ -265,7 +264,7 @@ try axis([2,length(file_name),0,1]); catch, end
 
 
 %%%%% Save results %%%%%
-disp('%%%%%% SerialTrack 2D hard particle tracking: Done! %%%%%%'); fprintf('\n');
+disp('===== SerialTrack 2D hard particle tracking: Done! ====='); fprintf('\n');
 results_file_name = 'results_2D_hardpar.mat';
 mkdir results
 save(['./results/' results_file_name],'parCoord_prev','uv_B2A_prev','track_A2B_prev','track_B2A_prev');
@@ -551,9 +550,9 @@ axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(
    
 
   
-%% %%%%% Compute accumulative tracking ratio from emerged trajectories %%%%%
+%% %%%%% Compute cumulative tracking ratio from emerged trajectories %%%%%
 
-disp('%%%%% Plot tracked accumulative displacements %%%%%'); fprintf('\n');
+disp('%%%%% Plot tracked cumulative displacements %%%%%'); fprintf('\n');
 parCoordTrajMat = cell2mat( parCoordTraj );
 
 [row1,col1] = find(isnan(parCoordTrajMat(1:length(Img):end,1))==0);
@@ -569,11 +568,11 @@ end
 defList = [2:1:length(Img)];
 fig=figure; ax=axes; hold on; plot(defList,trackParaccum_track_ratio,'bs--','linewidth',1);
 adjust_fig(fig,ax,'','',''); box on; title('');
-xlabel('Image #'); ylabel('accumulative tracking ratio');
+xlabel('Image #'); ylabel('cumulative tracking ratio');
 try axis([2,length(Img),0,1]); catch; end
 
 
-%%%%% Plot tracked accumulative displacement field %%%%%
+%%%%% Plot tracked cumulative displacement field %%%%%
 %%%%% Make a video %%%%%
 v = VideoWriter('video_2D_inc_accum.avi'); v.FrameRate = 5; open(v); figure,
 for ImgSeqNum = 2:length(Img)
@@ -587,7 +586,7 @@ for ImgSeqNum = 2:length(Img)
     % ----- Cone plot grid data: displecement -----
     clf; plotCone2(xstep*parCoordBaccum(:,1),ystep*parCoordBaccum(:,2),xstep*disp_A2Baccum(:,1),ystep*disp_A2Baccum(:,2));
     set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-    title(['Tracked accumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    title(['Tracked cumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y');
     axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(2), ...
           ystep*MPTPara.gridxyROIRange.gridy(1), ystep*MPTPara.gridxyROIRange.gridy(2) ]);
@@ -654,7 +653,7 @@ F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 %%%%% Cone plot grid data: displecement %%%%%
 figure, plotCone2(xstep*x_Grid_refB,ystep*y_Grid_refB,u_Grid_refB*xstep,v_Grid_refB*ystep );
 set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-title('Tracked accumulative displacement','fontweight','normal');
+title('Tracked cumulative displacement','fontweight','normal');
 axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(2), ...
       ystep*MPTPara.gridxyROIRange.gridy(1), ystep*MPTPara.gridxyROIRange.gridy(2) ]);
 

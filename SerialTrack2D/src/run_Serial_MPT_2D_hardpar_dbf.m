@@ -71,7 +71,6 @@ end
 % BeadPara.forloop = 1;           % Default (not used)
 % BeadPara.randNoise = 1e-7;      % Default (not used)
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 % BeadPara.color = 'black';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%% Pipe %%%%%%%%%%%%%
@@ -86,7 +85,6 @@ end
 % BeadPara.forloop = 1;           % Default (not used)
 % BeadPara.randNoise = 1e-7;      % Default (not used)
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 % BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 
@@ -105,6 +103,7 @@ end
 % MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 % MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 % MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;
+% MPTPara.distMissing = 2;         % Distance threshold to check whether particle has a match or not [px]
 
 %%%%%% To store results %%%%%
 parCoord_prev = cell(length(Img),1);
@@ -338,7 +337,7 @@ F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 %%%%% Cone plot grid data: displecement %%%%%
 figure, plotCone2(xstep*x_Grid_refB,ystep*y_Grid_refB,u_Grid_refB*xstep ,v_Grid_refB*ystep );
 set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-title('Tracked accumulative displacement','fontweight','normal');
+title('Tracked cumulative displacement','fontweight','normal');
 axis([xstep*MPTPara.gridxyROIRange.gridx(1), xstep*MPTPara.gridxyROIRange.gridx(2), ...
     ystep*MPTPara.gridxyROIRange.gridy(1), ystep*MPTPara.gridxyROIRange.gridy(2) ]);
 

@@ -1,9 +1,9 @@
-% %%%%%%%%%%%%%%%%%% SerialTrack (2D accumulative mode) %%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%% SerialTrack (2D cumulative mode) %%%%%%%%%%%%%%%%%
 % Main file of code "SerialTrack"
 % ***********************************************
 % Dimension:            2D
 % Particle rigidity:    soft (particle shape is not rigid) 
-% Tracking mode:        accumulative
+% Tracking mode:        cumulative
 % -----------------------------------------------
 %
 % -----------------------------------------------
@@ -159,8 +159,9 @@ parCoord_prev = cell(length(Img),1); parCoord_prev{1} = parCoordA;
 
  
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-fig=figure; ax=axes; hold on; plot(defList,track_ratio,'r^-.','linewidth',1);
+ 
+fig=figure; ax=axes; defList = [2:1:length(Img)]'; track_ratio = nan*defList;
+hold on; plot(defList,track_ratio,'r^-.','linewidth',1);
 adjust_fig(fig,ax,'','',''); box on; title('');
 xlabel('Frame #'); ylabel('Tracking ratio');
 axis([2,length(Img),0,1]);
@@ -204,8 +205,8 @@ for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
       
 end
   
-%% %%%%% accumulative tracking ratio %%%%%
-disp('%%%%% Calculate accumulative tracking ratio %%%%%'); fprintf('\n');
+%% %%%%% cumulative tracking ratio %%%%%
+disp('%%%%% Calculate cumulative tracking ratio %%%%%'); fprintf('\n');
 track_ratio = zeros(length(Img)-1,1);
 DefType = 'exp'; defList = [2:1:length(Img)]';
   
@@ -221,7 +222,7 @@ axis([2,length(Img),0,1]);
 
 
 %%%%% Save results %%%%%
-disp('%%%%%% SerialTrack soft particle tracking: Done! %%%%%%');  
+disp('===== SerialTrack soft particle tracking: Done! =====');  
 results_file_name = 'results_2D_softpar.mat';
 mkdir results
 save(['./results/' results_file_name],'xyGrid_prev','uvGrid_B2A_prev','track_A2B_prev','parCoord_prev');
@@ -232,8 +233,8 @@ save(['./results/' results_file_name],'xyGrid_prev','uvGrid_B2A_prev','track_A2B
 % Postprocessing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-%%%%% Visualize tracked accumulative displacement of each frame %%%%%
-disp('%%%%% Plot tracked accumulative deformations %%%%%'); fprintf('\n');
+%%%%% Visualize tracked cumulative displacement of each frame %%%%%
+disp('%%%%% Plot tracked cumulative deformations %%%%%'); fprintf('\n');
 
 %%%%% Experimental parameters %%%%%
 try xstep = MPTPara.xstep; catch, xstep = 1; end % unit: um/px
@@ -266,13 +267,13 @@ for ImgSeqNum = [ 51 ] % 2 : length(Img) % ImgSeqNum: Frame #
     % %%%%% Plot displacements refA %%%%%
     % clf,  plotCone2(xScatter_refA*xstep,yScatter_refA*xstep,disp_A2B_uScatter*xstep,disp_A2B_vScatter*xstep);
     % set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-    % title(['Tracked accumulative displacement (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    % title(['Tracked cumulative displacement (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     % xlabel(''); ylabel('');
     
     %%%%% Plot displacements refB %%%%%
     clf,  plotCone2(xScatter_refB*xstep,yScatter_refB*xstep,disp_A2B_uScatter*xstep,disp_A2B_vScatter*xstep);
     set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-    title(['Tracked accumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    title(['Tracked cumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y');
     axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ...
                 MPTPara.gridxyROIRange.gridy(1), MPTPara.gridxyROIRange.gridy(2) ]);

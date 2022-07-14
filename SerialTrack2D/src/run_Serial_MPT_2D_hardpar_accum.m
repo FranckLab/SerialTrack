@@ -1,9 +1,9 @@
-% %%%%%%%%%%%%%%%%%% SerialTrack (2D accumulative mode) %%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%% SerialTrack (2D cumulative mode) %%%%%%%%%%%%%%%%%
 % Main file of code "SerialTrack"
 % ***********************************************
 % Dimension:            2D
 % Particle rigidity:    hard 
-% Tracking mode:        accumulative
+% Tracking mode:        cumulative
 % -----------------------------------------------
 %
 % -----------------------------------------------
@@ -71,7 +71,6 @@ end
 % BeadPara.forloop = 1;           % Default (not used)
 % BeadPara.randNoise = 1e-7;      % Default (not used)
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 % BeadPara.color = 'black';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%% Pipe %%%%%%%%%%%%%
@@ -86,7 +85,6 @@ end
 % BeadPara.forloop = 1;           % Default (not used)
 % BeadPara.randNoise = 1e-7;      % Default (not used)
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 % BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -184,6 +182,7 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 % MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 % MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 % MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;
+% MPTPara.distMissing = 2;         % Distance threshold to check whether particle has a match or not [px]
 
 %%%%%% To store results %%%%%
 parCoord_prev = cell(length(Img),1);        parCoord_prev{1} = parCoordA;
@@ -228,7 +227,7 @@ for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
      
     %%%%% Store results %%%%%
     parCoord_prev{ImgSeqNum} = parCoordB_temp;
-    uv_B2A_prev{ImgSeqNum-1} = uv_B2A_temp;  % accumulative displacement
+    uv_B2A_prev{ImgSeqNum-1} = uv_B2A_temp;  % cumulative displacement
     track_A2B_prev{ImgSeqNum-1} = track_A2B_temp;
     resultDisp{ImgSeqNum-1} = resultDisp_temp;
     resultDefGrad{ImgSeqNum-1} = resultDefGrad_temp;
@@ -242,7 +241,7 @@ for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
 end
   
 
-%%%%% accumulative tracking ratio %%%%%
+%%%%% cumulative tracking ratio %%%%%
 disp('%%%%% Calculate incremental tracking ratio %%%%%'); fprintf('\n');
 track_ratio = zeros(length(Img)-1,1);
 DefType = 'exp'; defList = [2:1:length(Img)]';
@@ -272,8 +271,8 @@ save(['./results/' results_file_name],'parCoord_prev','uv_B2A_prev','resultDisp'
 % Postprocessing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-%%%%% Visualize tracked accumulative displacement of each frame %%%%%
-disp('%%%%% Plot tracked accumulative deformations %%%%%'); fprintf('\n');
+%%%%% Visualize tracked cumulative displacement of each frame %%%%%
+disp('%%%%% Plot tracked cumulative deformations %%%%%'); fprintf('\n');
 
 %%%%% Experimental parameters %%%%%
 try xstep = MPTPara.xstep; catch, xstep = 1; end % unit: um/px
@@ -293,7 +292,7 @@ for ImgSeqNum = 2:length(Img) % ImgSeqNum: Frame #
     %%%%% Plot displacements %%%%%
     clf, plotCone2(parCoordB(:,1)*xstep,parCoordB(:,2)*ystep,disp_A2B_parCoordB(:,1)*xstep ,disp_A2B_parCoordB(:,2)*ystep );
     set(gca,'fontsize',18); view(2); box on; axis equal; axis tight; set(gca,'YDir','reverse');
-    title(['Tracked accumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    title(['Tracked cumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y');
     axis(xstep*[MPTPara.gridxyROIRange.gridx(1), MPTPara.gridxyROIRange.gridx(2), ...
                 MPTPara.gridxyROIRange.gridy(1), MPTPara.gridxyROIRange.gridy(2) ]);

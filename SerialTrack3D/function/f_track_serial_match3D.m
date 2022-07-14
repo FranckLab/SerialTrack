@@ -52,7 +52,7 @@ iterStopThres = 1e-2;    % ADMM iteration stopping threshold
 usePrevResults = 0;      % Whether use previous results or not
 strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
-BeadParaDistMissing = 2; % Distance threshold to check whether particle has a match or not [px]
+MPTParaDistMissing = 2;  % Distance threshold to check whether particle has a match or not [px]
 gridxyzROIRange.gridx = [min(parCoordA(:,1)),max(parCoordA(:,1))]; % ROI-gridx
 gridxyzROIRange.gridy = [min(parCoordA(:,2)),max(parCoordA(:,2))]; % ROI-gridy
 gridxyzROIRange.gridz = [min(parCoordA(:,3)),max(parCoordA(:,3))]; % ROI-gridz
@@ -91,8 +91,8 @@ for tempi = 1:floor(length(varargin)/2)
             uvw_B2A_prev = varargin{2*tempi};
         case lower('ImgSeqNum') % ### Only used in cumulative mode and using previous results
             ImgSeqNum = varargin{2*tempi};
-        case lower('BeadParaDistMissing')
-            BeadParaDistMissing = varargin{2*tempi};
+        case lower('MPTParaDistMissing')
+            MPTParaDistMissing = varargin{2*tempi};
         otherwise
     end
 end
@@ -311,12 +311,12 @@ while iterNum < maxIterNum
         if n_neighbors < 4 %  n_neighborsMax/2
             neighborInd_BCurrA = knnsearch(parCoordBCurr(:,1:3),parCoordA(:,1:3),'K',1); % Find pts in BCurr near pts in ACurr
             dist_BCurrA = sqrt( sum((parCoordBCurr(neighborInd_BCurrA,1:3) -  parCoordA).^2,2) ); % figure, h = histogram(dist_BCurrA);
-            [parNotMissingIndA,~] = find(dist_BCurrA < max([2, BeadParaDistMissing])); % Find particles not missing in Particle A
+            [parNotMissingIndA,~] = find(dist_BCurrA < max([2, MPTParaDistMissing])); % Find particles not missing in Particle A
             
             neighborInd_ABCurr = knnsearch(parCoordA(:,1:3),parCoordBCurr(:,1:3),'K',1); % Find pts in ACurr near pts in BCurr
             dist_ABCurr = sqrt( sum((parCoordA(neighborInd_ABCurr,1:3) - parCoordBCurr).^2,2) );
             
-            [parNotMissingIndBCurr,~] = find(dist_ABCurr < max([2, BeadParaDistMissing]));  % Find particles not missing in Particle BCurr
+            [parNotMissingIndBCurr,~] = find(dist_ABCurr < max([2, MPTParaDistMissing]));  % Find particles not missing in Particle BCurr
         end
         
         

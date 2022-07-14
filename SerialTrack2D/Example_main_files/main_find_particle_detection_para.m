@@ -2,8 +2,8 @@
 % SerialTrack: to test chosen particle detection parameters
 % ===================================================
 % Author: Jin Yang, Ph.D.
-% Email: jyang526@wisc.edu -or-  aldicdvc@gmail.com 
-% Date: 02/2022
+% Email: jyang526@wisc.edu -or- aldicdvc@gmail.com 
+% Date: 02/2022; 07/2022
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Initialization
@@ -53,7 +53,6 @@ BeadPara.abc = [1,1];           % By default
 BeadPara.forloop = 1;           % By default
 BeadPara.randNoise = 1e-7;      % By default
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not 
 BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

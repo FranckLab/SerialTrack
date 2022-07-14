@@ -3,14 +3,14 @@
 % ===================================================
 % Dimension:            2D
 % Particle rigidity:    hard 
-% Tracking mode:        accumulative
+% Tracking mode:        cumulative
 % Syn or Exp:           syn
-% Deformation mode:     rigid body motions:\subs translations & rotations
+% Deformation mode:     rigid body motions: translations & rotations
 %
 % ===================================================
 % Author: Jin Yang, Ph.D.
 % Email: jyang526@wisc.edu -or- aldicdvc@gmail.com 
-% Date: 02/2022
+% Date: 02/2022; 07/2022
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Initialization
@@ -30,8 +30,8 @@ MPTPara.tstep = 1; % unit: us
 
 %%%%% Tracking mode %%%%%
 MPTPara.mode = 'accum'; % {'inc': incremental mode; 
-                      %  'accum': accumulative mode; 
-                      %  'dbf': double frame}
+                        %  'accum': cumulative mode; 
+                        %  'dbf': double frame}
 
 %%%%% Particle rigidity %%%%%
 MPTPara.parType = 'hard'; % {'hard': hard particle; 
@@ -68,7 +68,6 @@ BeadPara.abc = [1,1];           % Default [not used in 2D]
 BeadPara.forloop = 1;           % Default [not used in 2D]
 BeadPara.randNoise = 1e-7;      % Default [not used in 2D]
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 BeadPara.color = 'white';       % Bead color: 'white' -or- 'black'
 
 
@@ -87,6 +86,7 @@ MPTPara.iterStopThres = 1e-2;    % ADMM iteration stopping threshold
 MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;  
+MPTPara.distMissing = 2;         % Distance threshold to check whether particle has a match or not [px]
 
 
 %%%% Postprocessing: merge trajectory segments %%%%%

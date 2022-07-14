@@ -9,8 +9,8 @@
 %
 % ===================================================
 % Author: Jin Yang, Ph.D.
-% Email: jyang526@wisc.edu -or-  aldicdvc@gmail.com 
-% Date: 02/2022
+% Email: jyang526@wisc.edu -or- aldicdvc@gmail.com 
+% Date: 02/2022; 07/2022
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Initialization
@@ -30,7 +30,7 @@ MPTPara.tstep = 1;   % unit: 1/frame
 
 %%%%% Code mode %%%%%
 MPTPara.mode = 'inc'; % {'inc': incremental mode; 
-                      %  'accum': accumulative mode; 
+                      %  'accum': cumulative mode; 
                       %  'dbf': double frame}
 
 MPTPara.parType = 'hard'; % {'hard': hard particle; 
@@ -66,7 +66,6 @@ BeadPara.abc = [1,1];           % By default
 BeadPara.forloop = 1;           % By default
 BeadPara.randNoise = 1e-7;      % By default
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', Beadpara.beadSize-1 ); % Disk blur
-BeadPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 BeadPara.color = 'black';       % Bead color: 'white' -or- 'black'
 
 
@@ -85,6 +84,7 @@ MPTPara.iterStopThres = 1e-2;    % ADMM iteration stopping threshold
 MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;  
+MPTPara.distMissing = 2;       % Distance threshold to check whether particle has a match or not [px]
 
 
 %%%% Postprocessing: merge trajectory segments %%%%%

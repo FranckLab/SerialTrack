@@ -1,9 +1,9 @@
-% %%%%%%%%%%%%%%%%%% SerialTrack (3D incremental mode) %%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%% SerialTrack (3D cumulative mode) %%%%%%%%%%%%%%%%%
 % Main file of code "SerialTrack"
 % ***********************************************
 % Dimension:            3D
 % Particle rigidity:    hard 
-% Tracking mode:        accumulative
+% Tracking mode:        cumulative
 % -----------------------------------------------
 %
 % -----------------------------------------------
@@ -64,7 +64,6 @@ disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
 % BeadPara.forloop = 1;           % Default [not currently used]
 % BeadPara.randNoise = 1e-7;      % Default [not currently used]
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not [px]
 % BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -120,6 +119,8 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 % MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 % MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 % MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;
+% MPTPara.distMissing = 5;         % Distance threshold to check whether particle has a match or not [px]
+
 
 %%%%%% To store results %%%%%
 parCoord_prev = cell(length(file_name),1);     parCoord_prev{1} = parCoordA;
@@ -145,7 +146,7 @@ for ImgSeqNum = 2 : length(file_name)  % "ImgSeqNum" is the frame index
     
     %%%%% Store results %%%%%
     parCoord_prev{ImgSeqNum} = parCoordB_temp;
-    uvw_B2A_prev{ImgSeqNum-1} = uvw_B2A_temp;  % accumulative displacement
+    uvw_B2A_prev{ImgSeqNum-1} = uvw_B2A_temp;  % cumulative displacement
     resultDisp{ImgSeqNum-1} = resultDisp_temp;
     resultDefGrad{ImgSeqNum-1} = resultDefGrad_temp;
     track_A2B_prev{ImgSeqNum-1} = track_A2B_temp;
@@ -153,8 +154,8 @@ for ImgSeqNum = 2 : length(file_name)  % "ImgSeqNum" is the frame index
 end
   
 
-%% %%%%% accumulative tracking ratio %%%%%
-disp('%%%%% Calculate accumulative tracking ratio %%%%%'); fprintf('\n');
+%% %%%%% cumulative tracking ratio %%%%%
+disp('%%%%% Calculate cumulative tracking ratio %%%%%'); fprintf('\n');
 track_ratio = zeros(length(file_name)-1,1);
 DefType = 'exp'; defList = [2:1:length(file_name)]';
   
@@ -180,8 +181,8 @@ save(['./results/' results_file_name],'parCoord_prev','uvw_B2A_prev','resultDisp
 % Postprocessing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-%%%%% Visualize tracked accumulative displacement of each frame %%%%%
-disp('%%%%% Plot tracked accumulative deformations %%%%%'); fprintf('\n');
+%%%%% Visualize tracked cumulative displacement of each frame %%%%%
+disp('%%%%% Plot tracked cumulative deformations %%%%%'); fprintf('\n');
 
 %%%%% Experimental parameters %%%%%
 try xstep = MPTPara.xstep; catch, xstep = 1; end % unit: um/px
@@ -203,7 +204,7 @@ for ImgSeqNum = 2:length(file_name)
     clf, plotCone3(parCoordB(:,1)*xstep,parCoordB(:,2)*ystep,parCoordB(:,3)*zstep, ...
         disp_A2B_parCoordB(:,1)*xstep ,disp_A2B_parCoordB(:,2)*ystep ,disp_A2B_parCoordB(:,3)*zstep  );
     set(gca,'fontsize',18); view(3); box on; axis equal; axis tight;  
-    title(['Tracked accumulative displacement (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    title(['Tracked cumulative displacement (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y'); zlabel('z');
     axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
           ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
@@ -326,7 +327,7 @@ F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 %%%%% Cone plot grid data: displecement %%%%%
 figure, plotCone3(x_Grid_refB*xstep,y_Grid_refB*ystep,z_Grid_refB*zstep,u_Grid_refB*xstep,v_Grid_refB*ystep,w_Grid_refB*zstep);
 set(gca,'fontsize',18); view(3); box on; axis equal; axis tight;  
-title('Tracked accumulative displacement','fontweight','normal');
+title('Tracked cumulative displacement','fontweight','normal');
 axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
       ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
       zstep*MPTPara.gridxyzROIRange.gridz(1), zstep*MPTPara.gridxyzROIRange.gridz(2)]);

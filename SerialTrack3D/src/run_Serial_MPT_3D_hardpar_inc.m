@@ -64,7 +64,6 @@ disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
 % BeadPara.forloop = 1;           % Default [not currently used]
 % BeadPara.randNoise = 1e-7;      % Default [not currently used]
 % BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-% BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not [px]
 % BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black' 
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -121,6 +120,7 @@ disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
 % MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 % MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge
 % MPTPara.usePrevResults = 0;      % Whether use previous results or not: 0-no; 1-yes;
+% MPTPara.distMissing = 5;         % Distance threshold to check whether particle has a match or not [px]
 
 %%%%%% To store results %%%%%
 parCoord_prev = cell(length(file_name)-1,1);    parCoord_prev{1} = parCoordA;
@@ -470,9 +470,9 @@ axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.grid
       zstep*MPTPara.gridxyzROIRange.gridz(1), zstep*MPTPara.gridxyzROIRange.gridz(2)]);
 
   
-%% %%%%% Compute accumulative tracking ratio from emerged trajectories %%%%%
+%% %%%%% Compute cumulative tracking ratio from emerged trajectories %%%%%
  
-disp('%%%%% Plot tracked accumulative displacements %%%%%'); fprintf('\n');
+disp('%%%%% Plot tracked umulative displacements %%%%%'); fprintf('\n');
 parCoordTrajMat = cell2mat( parCoordTraj );
 
 [row1,col1] = find(isnan(parCoordTrajMat(1:length(file_name):end,1))==0);
@@ -491,7 +491,7 @@ adjust_fig(fig,ax,'','',''); box on; title('');
 xlabel('Image #'); ylabel('Tracking ratio');
 try axis([2,length(file_name),0,1]); catch; end
 
-%%%%% Plot tracked accumulative displacement field %%%%%
+%%%%% Plot tracked cumulative displacement field %%%%%
 %%%%% Make a video %%%%%
 v = VideoWriter('video_3D_inc_accum.avi'); v.FrameRate = 5; open(v); figure,
 for ImgSeqNum = 2:length(file_name)
@@ -506,7 +506,7 @@ for ImgSeqNum = 2:length(file_name)
     clf; plotCone3(xstep*parCoordBaccum(:,1),ystep*parCoordBaccum(:,2),zstep*parCoordBaccum(:,3), ...
                    xstep*disp_A2Baccum(:,1),ystep*disp_A2Baccum(:,2),zstep*disp_A2Baccum(:,3));
     set(gca,'fontsize',18); view(3); box on; axis equal; axis tight; 
-    title(['Tracked accumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
+    title(['Tracked cumulative disp (#',num2str(ImgSeqNum),')'],'fontweight','normal');
     xlabel('x'); ylabel('y'); zlabel('z');
     axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
           ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
@@ -582,7 +582,7 @@ F_Grid_refB_Vector_PhysWorld = F_Grid_refB_Vector_PhysWorld(:);
 %%%%% Cone plot grid data: displecement %%%%%
 figure, plotCone3(x_Grid_refB*xstep,y_Grid_refB*ystep,z_Grid_refB*zstep,u_Grid_refB*xstep,v_Grid_refB*ystep,w_Grid_refB*zstep );
 set(gca,'fontsize',18); view(3); box on; axis equal; axis tight;  
-title('Tracked accumulative displacement','fontweight','normal');
+title('Tracked cumulative displacement','fontweight','normal');
 axis([xstep*MPTPara.gridxyzROIRange.gridx(1), xstep*MPTPara.gridxyzROIRange.gridx(2), ...
       ystep*MPTPara.gridxyzROIRange.gridy(1), ystep*MPTPara.gridxyzROIRange.gridy(2), ...
       zstep*MPTPara.gridxyzROIRange.gridz(1), zstep*MPTPara.gridxyzROIRange.gridz(2)]);

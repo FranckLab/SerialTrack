@@ -3,7 +3,7 @@
 % ===================================================
 % Dimension:            3D
 % Particle rigidity:    hard 
-% Tracking mode:        accumulative
+% Tracking mode:        cumulative
 % Syn or Exp:           syn
 % Deformation mode:     uniaxial stretch or simple shear
 %
@@ -30,7 +30,7 @@ MPTPara.tstep = 1; % unit: us
 
 %%%%% Code mode %%%%%
 MPTPara.mode = 'accum'; % {'inc': incremental mode; 
-                        %  'accum': accumulative mode}
+                        %  'accum': cumulative mode}
 
 %%%%% Particle rigidity %%%%%
 MPTPara.parType = 'hard'; % {'hard': hard particle; 
@@ -43,7 +43,8 @@ disp(['Particle type: ',MPTPara.parType]);
 disp('************************************************'); fprintf('\n');
 
 %%%%% SerialTrack path %%%%%
-SerialTrackPath = 'D:\MATLAB\SerialTrack3D'; % TODO: modify the path
+SerialTrackPath = pwd; % % TODO: modify the path of "SerialTrack3D";
+% Example: SerialTrackPath = 'D:\MATLAB\SerialTrack-main\SerialTrack3D';
 
 %%%%% Volumetric image path %%%%%
 % fileNameAll = '20190504*.mat';
@@ -53,6 +54,7 @@ SerialTrackPath = 'D:\MATLAB\SerialTrack3D'; % TODO: modify the path
 DefType = 'simpleshear';    % {'translation','stretch','simpleshear','rotation'}
 SeedingDensityType = 2;     % {1,2,3,4}
 fileNameAll = 'vol_*.mat';  % file name(s)
+
 % ----- file folder name -----
 if strcmp(DefType,'translation')==1
     fileFolder = ['./imgFolder/img_syn_hardpar/img_trans_hardpar_sd',num2str(SeedingDensityType)];
@@ -86,7 +88,6 @@ BeadPara.abc = [1,1,1];         % Default (grid size refinement for localization
 BeadPara.forloop = 1;           % "for" or linear indexing
 BeadPara.randNoise = 1e-7;      % Default small random background noise
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-BeadPara.distMissing = 5;       % Distance threshold to check whether particle has a match or not [px] 
 BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 
@@ -104,6 +105,7 @@ MPTPara.iterStopThres = 1e-3;    % ADMM iteration stopping threshold
 MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 MPTPara.strain_f_o_s = 60;       % Size of virtual strain gauge [px]
 MPTPara.usePrevResults = 1;      % Whether use previous results or not: 0-no; 1-yes;  
+MPTPara.distMissing = 5;         % Distance threshold to check whether particle has a match or not
 
 
 %%%% Postprocessing: merge trajectory segments %%%%%

@@ -32,7 +32,7 @@ MPTPara.tstep = 1;      % unit: quasistatic strain step
 
 %%%%% Code mode %%%%%
 MPTPara.mode = 'inc'; % {'inc': incremental mode; 
-                      %  'accum': accumulative mode}
+                      %  'accum': cumulative mode}
 
 %%%%% Particle rigidity %%%%%
 MPTPara.parType = 'hard'; % {'hard': hard particle; 
@@ -45,7 +45,9 @@ disp(['Particle type: ',MPTPara.parType]);
 disp('************************************************'); fprintf('\n');
 
 %%%%% SerialTrack path %%%%%
-SerialTrackPath = 'D:\MATLAB\SerialTrack3D\'; % TODO: modify the path
+SerialTrackPath = pwd; % % TODO: modify the path of "SerialTrack3D";
+% Example: SerialTrackPath = 'D:\MATLAB\SerialTrack-main\SerialTrack3D';
+
 
 %%%%% Volumetric image path %%%%%
 fileNameAll = 'QS_shear_*.mat'; 
@@ -74,7 +76,6 @@ BeadPara.abc = [1,1,1];         % Default [not used for method 2]
 BeadPara.forloop = 1;           % Default [not used for method 2]
 BeadPara.randNoise = 1e-7;      % Default [not used for method 2]
 BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
-BeadPara.distMissing = 70;      % Distance threshold to check whether particle has a match or not 
 BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 
@@ -93,6 +94,7 @@ MPTPara.iterStopThres = 1e-3;    % ADMM iteration stopping threshold
 MPTPara.strain_n_neighbors = 20; % # of neighboring particles used in strain gauge
 MPTPara.strain_f_o_s = 700;      % Size of virtual strain gauge [px]
 MPTPara.usePrevResults = 1;      % Whether use previous results or not: 0-no; 1-yes;  
+MPTPara.distMissing = 70;        % Distance threshold to check whether particle has a match or not 
 
 
 %%%% Postprocessing: merge trajectory segments %%%%%

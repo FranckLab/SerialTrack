@@ -7,7 +7,7 @@ This repository contains the Matlab m-files to run our SerialTrack particle trac
 ### Important pages
 * [Download latest version v1.0!](https://github.com/FranckLab/SerialTrack/releases)
 * [Example data] (https://minds.wisconsin.edu/handle/1793/82901) 
-* [Manual](https://github.com/FranckLab/SerialTrack/blob/main/manual.pdf)
+* [Manual](https://github.com/FranckLab/SerialTrack/blob/main/manual_v1.0.pdf)
 * [FAQ](https://github.com/FranckLab/SerialTrack#faq)
 * [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues)
 * [Bug Fixes/history](https://github.com/FranckLab/SerialTrack/wiki/Bug-Fixes!)

@@ -55,15 +55,15 @@ disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
 % BeadPara.detectionMethod = 2;   % Particle detection method: 1 = TPT (blob finding + radial projection), 
 %                                                              2 = TracTrac (LoG blob finding + lsq fit of gaussian)
 % BeadPara.thres = 0.4;           % Threshold for detecting particles
-% BeadPara.beadSize = 0;          % Estimated radius of a single particle [px]
-% BeadPara.minSize = 2;           % Minimum area of a single particle [px^2]
-% BeadPara.maxSize = 1000;        % Maximum area of a single particle [px^2]
+% BeadPara.beadRad = 0;           % Estimated radius of a single particle [px]
+% BeadPara.minSize = 2;           % Minimum volume of a single particle [px^3]
+% BeadPara.maxSize = 1000;        % Maximum volume of a single particle [px^3]
 % BeadPara.winSize = [5, 5, 5];   % Default window search size for a single particle [px]
 % BeadPara.dccd = [1,1,1];        % Default [not currently used]
 % BeadPara.abc = [1,1,1];         % Default [not currently used]
 % BeadPara.forloop = 1;           % Default [not currently used]
 % BeadPara.randNoise = 1e-7;      % Default [not currently used]
-% BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
+% BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadRad-1 ); % Disk blur
 % BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

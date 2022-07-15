@@ -107,7 +107,7 @@ disp('--- Select ROI from the image, double click when done ---')
 
 % title('Click top-left and the bottom-right corner points','fontweight','normal','fontsize',16);
 
-%show figure for cropping
+% show figure for cropping
 [~,rect] = imcrop(imread(file_name{1}));
 
 % set up the gridxy variable

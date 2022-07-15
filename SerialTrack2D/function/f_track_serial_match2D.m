@@ -125,7 +125,7 @@ end
 %% %%%%%%%%%%%%%%%%%%%%%% ADMM iterations %%%%%%%%%%%%%%%%%%%%% 
 while iterNum < maxIterNum
     
-    close all;
+    % close all;
     % # of neighboring particles: >1 (topology) => 1 (nearest neighboring search)
     n_neighbors = round(n_neighborsMin + exp(-0.5*iterNum)*(n_neighborsMax-n_neighborsMin)); 
     % current iteration number

@@ -27,8 +27,8 @@ addpath( './function/','./src/');
 
 %%%%% Problem dimension and units %%%%%
 MPTPara.DIM = 2;    % problem dimension
-MPTPara.xstep = 1;  % unit: um/px
-MPTPara.tstep = 1;  % unit: us
+MPTPara.xstep = 1;  % unit: px
+MPTPara.tstep = 1;  % unit: 1/frame
 
 %%%%% Code mode %%%%%
 MPTPara.mode = 'accum'; % {'inc': incremental mode; 

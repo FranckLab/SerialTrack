@@ -93,8 +93,8 @@ nbins = max([15,nbins]);
 
 h = figure;
 histogram(numPixels,nbins)
-minPixels = input('Enter min bead size: ');  %Minimum pixel count in blob for bead
-maxPixels = input('Enter max bead size: ');  %Maximum pixel count in blob for bead
+minPixels = input('Enter min bead size (area): ');  %Minimum pixel count in blob for bead
+maxPixels = input('Enter max bead size (area): ');  %Maximum pixel count in blob for bead
 try
     close(h)
 catch

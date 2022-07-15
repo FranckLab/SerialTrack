@@ -98,7 +98,7 @@ elseif p_size == 0
     props = regionprops( CC ,'Area','Centroid','PixelIdxList','MajorAxisLength','MinorAxisLength','Eccentricity');
 
     propsAreaList = [props.Area]';
-    propsRadList = sort(sqrt(propsAreaList/pi),'descend');
+    propsPixelsList = sort( ( propsAreaList ),'descend');
     propMajorAxisLength = [props.MajorAxisLength]';
     propMinorAxisLength = [props.MinorAxisLength]';
     propCentroidList = [props.Centroid]'; 
@@ -106,10 +106,10 @@ elseif p_size == 0
     
     propsEccentricity = propMajorAxisLength ./ propMinorAxisLength;
 
-    % figure, hist(propsRadList,20);
+    % figure, hist(propsPixelsList,20);
     % figure, hist(propsEccentricity,20);
     
-    [row1,~] = find( propsRadList<maxPixels+2 & propsRadList>minPixels-1 & ...
+    [row1,~] = find( propsPixelsList<maxPixels+2 & propsPixelsList>minPixels-1 & ...
                         propsEccentricity > 0.25 & propsEccentricity < 4);
     
     part_list = propCentroidList(row1,[2,1]);

@@ -79,8 +79,11 @@ BeadPara.color = 'black';       % Bead color: 'white' -or- 'black'
 MPTPara.f_o_s = 30;              % Size of search field: max(|u|,|v|) [px]
 MPTPara.n_neighborsMax = 25;     % Max # of neighboring particles
 MPTPara.n_neighborsMin = 1;      % Min # of neighboring particles
-MPTPara.locSolver = 1;           % Local solver: 1-topology-based feature; 2-histogram-based feature first and then topology-based feature;
-MPTPara.gbSolver = 3;            % Global step solver: 1-moving least square fitting; 2-global regularization; 3-ADMM iterations
+MPTPara.locSolver = 1;           % Local solver: 1-topology-based feature; 
+                                 %               2-histogram-based feature first and then topology-based feature;
+MPTPara.gbSolver = 3;            % Global step solver: 1-moving least square fitting; 
+                                 %                     2-global regularization; 
+                                 %                     3-ADMM iterations
 MPTPara.smoothness = 1e-1;       % Coefficient of regularization
 MPTPara.outlrThres = 2;          % Threshold for removing outliers in TPT
 MPTPara.maxIterNum = 20;         % Max ADMM iteration number

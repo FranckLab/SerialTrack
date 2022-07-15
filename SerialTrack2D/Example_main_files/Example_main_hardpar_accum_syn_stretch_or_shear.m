@@ -57,7 +57,7 @@ end
 %%%%% Particle detection parameters %%%%%
 %%%%% Bead parameters %%%%%
 BeadPara.thres = 0.5;           % Threshold for detecting particles
-BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
+BeadPara.beadRad = 3;           % Estimated radius of a single particle [px]
 BeadPara.minSize = 2;           % Minimum area of a single particle [px^2]
 BeadPara.maxSize = 20;          % Maximum area of a single particle [px^2]
 BeadPara.winSize = [5, 5];      % Default [not used in 2D]
@@ -65,7 +65,7 @@ BeadPara.dccd = [1,1];          % Default [not used in 2D]
 BeadPara.abc = [1,1];           % Default [not used in 2D]
 BeadPara.forloop = 1;           % Default [not used in 2D]
 BeadPara.randNoise = 1e-7;      % Default [not used in 2D]
-BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
+BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadRad-1 ); % Disk blur
 BeadPara.color = 'white';       % Bead color: 'white' -or- 'black'
 
 

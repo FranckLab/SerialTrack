@@ -79,7 +79,7 @@ BeadPara.detectionMethod = 1;  % Particle detection method: 1 = TPT (blob findin
 
 %%%%% Bead Parameters %%%%%
 BeadPara.thres = 0.5;           % Threshold for detecting particles
-BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
+BeadPara.beadRad = 3;           % Estimated radius of a single particle [px]
 BeadPara.minSize = 4;           % Minimum volume of a single particle [px^3]
 BeadPara.maxSize = 100;         % Maximum volume of a single particle [px^3]
 BeadPara.winSize = [5,5,5];     % Default (window size for bead localization)
@@ -87,7 +87,7 @@ BeadPara.dccd = [1,1,1];        % Default (grid size for localization)
 BeadPara.abc = [1,1,1];         % Default (grid size refinement for localization)
 BeadPara.forloop = 1;           % "for" or linear indexing
 BeadPara.randNoise = 1e-7;      % Default small random background noise
-BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
+BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadRad-1 ); % Disk blur
 BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
 
 

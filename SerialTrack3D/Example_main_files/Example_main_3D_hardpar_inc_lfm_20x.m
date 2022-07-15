@@ -65,15 +65,15 @@ maskfilename = '';
 %%%%% Particle detection parameters %%%%%
 %%%%% Bead Parameter %%%%%
 BeadPara.thres = 0.1;           % Threshold for detecting particles
-BeadPara.beadSize = 20;         % Estimated radius of a single particle
-BeadPara.minSize = 5;           % Minimum radius of a single particle
-BeadPara.maxSize = 10000;       % Maximum radius of a single particle
+BeadPara.beadRad = 20;          % Estimated radius of a single particle
+BeadPara.minSize = 5;           % Minimum volume of a single particle
+BeadPara.maxSize = 10000;       % Maximum volume of a single particle
 BeadPara.winSize = [5,5,5];     % By default
 BeadPara.dccd = [1,1,1];        % By default
 BeadPara.abc = [1,1,1];         % By default
 BeadPara.forloop = 1;           % By default
 BeadPara.randNoise = 1e-7;      % By default
-BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
+BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadRad-1 ); % Disk blur
 BeadPara.color = 'white';       % By default
 
 

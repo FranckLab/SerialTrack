@@ -93,6 +93,8 @@ nbins = max([15,nbins]);
 
 h = figure;
 histogram(numPixels,nbins)
+disp('Set estimated bead rad as "0" if bead radii are various.')
+estimatedRad = input('Enter estimated bead rad (px): ');  %Estimated blob radius for bead
 minPixels = input('Enter min bead size (area): ');  %Minimum pixel count in blob for bead
 maxPixels = input('Enter max bead size (area): ');  %Maximum pixel count in blob for bead
 try
@@ -100,6 +102,7 @@ try
 catch
 end
 
+BeadPara.beadRad = estimatedRad; %Estimated blob radius for bead
 BeadPara.minSize = minPixels;  %Minimum pixel count in blob for bead
 BeadPara.maxSize = maxPixels;  %Maximum pixel count in blob for bead
 

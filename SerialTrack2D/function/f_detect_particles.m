@@ -18,7 +18,7 @@ function [part_list] = f_detect_particles(im,beadPara)
 %   -------
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-p_size = beadPara.beadSize;
+p_size = beadPara.beadRad;
 p_int = beadPara.thres;
   
 %% Find beads between minPixels and maxPixels

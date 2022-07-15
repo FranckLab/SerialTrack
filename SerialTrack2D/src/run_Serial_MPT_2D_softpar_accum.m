@@ -22,7 +22,7 @@
 % -----------------------------------------------
 % Author: Jin Yang
 % Contact and support: jyang526@wisc.edu -or- aldicdvc@gmail.com
-% Date: 2020.12.
+% Date: 2020.12; 2022.07
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% 
@@ -115,10 +115,40 @@ end
 % x{1}{ImgSeqNum} = radial2center(double(currImg2)/max(double(currImg2(:))),x{1}{ImgSeqNum},BeadPara); % Localize particles
 % ----------------------------
 %%%%% Method 2: LoG operator (modified TracTrac code) %%%%%
-
 %pre-process to get threshold and size values
-BeadPara = funGetBeadPara(BeadPara,currImg2_norm);
+YN = 0;
+while YN == 0
+    prompt = 'Adjust particle detection parameters? (Y/N) [N]: ';
+    YN_ = input(prompt,'s');
 
+    if strcmpi(YN_,'N')
+        YN = 1;
+
+    else
+
+        BeadPara = funGetBeadPara(BeadPara,currImg2_norm);
+
+        %run the particle detection and localization
+        x{1}{ImgSeqNum} = f_detect_particles(currImg2_norm,BeadPara);
+         
+        %%%%% Store particle positions as "parCoordA" %%%%%
+        x{1}{ImgSeqNum} = x{1}{ImgSeqNum} + [MPTPara.gridxyROIRange.gridx(1)-1, MPTPara.gridxyROIRange.gridy(1)-1];
+        parCoordA = x{1}{ImgSeqNum};
+
+        %%%%% Remove bad parCoord outside the image area %%%%%
+        for tempi=1:2, parCoordA( parCoordA(:,tempi)>size(Img{ImgSeqNum},tempi), : ) = []; end
+        for tempi=1:2, parCoordA( parCoordA(:,tempi)<1, : ) = []; end
+
+        %%%%% Plot %%%%%
+        figure, imshow(imread(file_name{1,1}))
+        hold on; plot( parCoordA(:,1), parCoordA(:,2), 'r.');
+        view(2); box on; axis equal; axis tight; set(gca,'fontsize',18);
+        title('Detected particles in ref image','fontweight','normal');
+
+    end
+
+end
+%%%%%%%%%%%% With decided particle detection parameters %%%%%%%%%%%
 %run the particle detection and localization
 x{1}{ImgSeqNum} = f_detect_particles(currImg2_norm,BeadPara);
 % ----------------------------
@@ -146,7 +176,7 @@ disp(['Detected particle # in ref image: ',num2str(size(parCoordA,1))]);
 disp('%%%%%% Detect particles: Done! %%%%%%'); fprintf('\n');
  
 
-
+ 
 %% %%%%% Initialization %%%%%
 %%%%%  MPT Parameter %%%%%
 % The user input MPTPara
@@ -203,6 +233,7 @@ for ImgSeqNum = 2 : length(Img)  % "ImgSeqNum" is the frame index
     plot(defList,track_ratio,'r^-.','linewidth',1);
     drawnow
       
+   
 end
   
 %% %%%%% cumulative tracking ratio %%%%%

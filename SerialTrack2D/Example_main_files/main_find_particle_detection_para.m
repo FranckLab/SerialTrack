@@ -44,7 +44,7 @@ disp('%%%%%% Load image mask file: Done! %%%%%%'); fprintf('\n');
 %%%%%%%%%% Pipe %%%%%%%%%%%%%
 %%%%% Bead Parameter %%%%%
 BeadPara.thres = 0.5;           % Threshold for detecting particles
-BeadPara.beadSize = 3;          % Estimated radius of a single particle [px]
+BeadPara.beadRad = 3;           % Estimated radius of a single particle [px]
 BeadPara.minSize = 2;           % Minimum area of a single particle [px^2]
 BeadPara.maxSize = 20;          % Maximum area of a single particle [px^2]
 BeadPara.winSize = [5, 5];      % By default
@@ -52,9 +52,9 @@ BeadPara.dccd = [1,1];          % By default
 BeadPara.abc = [1,1];           % By default
 BeadPara.forloop = 1;           % By default
 BeadPara.randNoise = 1e-7;      % By default
-BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadSize-1 ); % Disk blur
+BeadPara.PSF = [];              % PSF function; Example: PSF = fspecial('disk', BeadPara.beadRad-1 ); % Disk blur
 BeadPara.color = 'white';       % Foreground (particle) color: options, 'white' or 'black'
-
+if strcmp(BeadPara.color,'black')==1,  BeadPara.beadRad = 0; end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ImgSeqNum = 1; % First reference image
 currImg = Img{ImgSeqNum}.*MPTPara.ImgRefMask;
@@ -79,8 +79,9 @@ if strcmp(BeadPara.color,'black')
     se = strel('disk',removeobjradius);
     bws2 = imclose(bws2,se);
     currImg2 = double(bws2); % figure, imshow(uint8(currImg2));
+    currImg2_norm = double(currImg2)/max(double(currImg2(:)));
 else
-    currImg2 = currImg;
+    currImg2_norm = double(currImg)/max(double(currImg(:)));
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -91,7 +92,42 @@ end
 % x{1}{ImgSeqNum} = radial2center(double(currImg2)/max(double(currImg2(:))),x{1}{ImgSeqNum},BeadPara); % Localize particles
 % ----------------------------
 %%%%% Method 2: LoG operator (modified TracTrac code) %%%%%
-x{1}{ImgSeqNum} = f_detect_particles(double(currImg2)/max(double(currImg2(:))),BeadPara);
+%pre-process to get threshold and size values
+YN = 0;
+while YN == 0
+    prompt = 'Adjust particle detection parameters? (Y/N) [N]: ';
+    YN_ = input(prompt,'s');
+
+    if strcmpi(YN_,'N')
+        YN = 1;
+
+    else
+
+        BeadPara = funGetBeadPara(BeadPara,currImg2_norm);
+
+        %run the particle detection and localization
+        x{1}{ImgSeqNum} = f_detect_particles(currImg2_norm,BeadPara);
+         
+        %%%%% Store particle positions as "parCoordA" %%%%%
+        x{1}{ImgSeqNum} = x{1}{ImgSeqNum} + [MPTPara.gridxyROIRange.gridx(1)-1, MPTPara.gridxyROIRange.gridy(1)-1];
+        parCoordA = x{1}{ImgSeqNum};
+
+        %%%%% Remove bad parCoord outside the image area %%%%%
+        for tempi=1:2, parCoordA( parCoordA(:,tempi)>size(Img{ImgSeqNum},tempi), : ) = []; end
+        for tempi=1:2, parCoordA( parCoordA(:,tempi)<1, : ) = []; end
+
+        %%%%% Plot %%%%%
+        figure, imshow(imread(file_name{1,1}))
+        hold on; plot( parCoordA(:,1), parCoordA(:,2), 'r.');
+        view(2); box on; axis equal; axis tight; set(gca,'fontsize',18);
+        title('Detected particles in ref image','fontweight','normal');
+
+    end
+
+end
+%%%%%%%%%%%% With decided particle detection parameters %%%%%%%%%%%
+%run the particle detection and localization
+x{1}{ImgSeqNum} = f_detect_particles(currImg2_norm,BeadPara);
 % ----------------------------
 %%%%% Method 3: sift code %%%%%
 % [~,descriptors,locs] = sift(currImg2);

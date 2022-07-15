@@ -247,12 +247,12 @@ while iterNum < maxIterNum
         neighborInd_BA = knnsearch(parCoordBCurr(:,1:2),parCoordA(:,1:2),'K',1); % Find pts in BCurr near pts in ACurr
         dist_BA = sqrt( sum((parCoordBCurr(neighborInd_BA,1:2) -  parCoordA).^2,2) ); % figure, h = histogram(dist_BCurrA);
         % [AParNotMissing,~] = find(dist_BCurrA < max([2, max(abs(u_B2A_curr(:)))])); % Find particles not missing in Particle A
-        [parNotMissingIndA,~] = find(dist_BA < max([ MPTPara.distMissing, 0.5*BeadPara.beadSize])); % Find particles not missing in Particle A
+        [parNotMissingIndA,~] = find(dist_BA < max([ MPTPara.distMissing, 0.5*BeadPara.beadRad])); % Find particles not missing in Particle A
         
         neighborInd_AB = knnsearch(parCoordA(:,1:2),parCoordBCurr(:,1:2),'K',1); % Find pts in ACurr near pts in BCurr
         dist_AB = sqrt( sum((parCoordA(neighborInd_AB,1:2) -  parCoordBCurr).^2,2) );
         % [BCurrParNotMissing,~] = find(dist_ABCurr < max([2, max(abs(u_B2A_curr(:)))])); % Find particles not missing in Particle BCurr
-        [parNotMissingIndBCurr,~] = find(dist_AB < max([ MPTPara.distMissing, 0.5*BeadPara.beadSize]));  % Find particles not missing in Particle BCurr
+        [parNotMissingIndBCurr,~] = find(dist_AB < max([ MPTPara.distMissing, 0.5*BeadPara.beadRad]));  % Find particles not missing in Particle BCurr
         
     end
     

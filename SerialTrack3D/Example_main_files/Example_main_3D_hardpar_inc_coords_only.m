@@ -4,8 +4,7 @@
 % Dimension:            3D
 % Particle rigidity:    hard
 % Tracking mode:        incremental
-% Syn or Exp:           exp
-% Deformation mode:     hydrogel indentation
+% Deformation mode:     provided particle coordinates 
 %
 % ===================================================
 % Author: Jin Yang, Ph.D.

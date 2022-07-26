@@ -47,7 +47,7 @@ If used please cite:
  
 ```
 @article{yang2022serialtrack,
-  title = {SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking},
+  title = {{SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking}},
   author = {Yang, Jin and Yin, Yue and Landauer, Alexander K. and Buyuktozturk, Selda and Zhang, Jing and Summey, Luke and McGhee, Alexander and Fu, Matt K. and Dabiri, John O. and Franck, Christian},
   doi = {10.48550/ARXIV.2203.12573},
   url = {https://arxiv.org/abs/2203.12573},

@@ -44,24 +44,17 @@ Images should have segment-able and localizable particles: limited or no particl
 ## Cite
 If used please cite:
 [1] Jin Yang, Yue Yin, Alexander K. Landauer, Selda Buyuktozturk, Jing Zhang, Luke Summey, Alexander McGhee, Matt K. Fu, John O. Dabiri, Christian Franck. SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking. (2022) https://doi.org/10.48550/arXiv.2203.12573
-
-@article{bar2014fast,
-  title={A fast iterative digital volume correlation algorithm for large deformations},
-  author={Bar-Kochba, E and Toyjanova, J and Andrews, E and Kim, K-S and Franck, C},
-  journal={Experimental Mechanics},
-  pages={1--14},
-  year={2014},
-  publisher={Springer}
-}
-
+ 
+```
 @article{yang2022serialtrack,
   title = {SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking},
   author = {Yang, Jin and Yin, Yue and Landauer, Alexander K. and Buyuktozturk, Selda and Zhang, Jing and Summey, Luke and McGhee, Alexander and Fu, Matt K. and Dabiri, John O. and Franck, Christian},
   doi = {10.48550/ARXIV.2203.12573},
   url = {https://arxiv.org/abs/2203.12573},
   year = {2022}
-  publisher = {arXiv}
-}
- 
+  publisher = {arXiv}}
+```
+
+
 ## Contact and support
 For questions, please first refer to [FAQ](https://github.com/FranckLab/SerialTrack#faq) and [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues). Add a new question if similar issue hasn't been reported. The author's contact information can be found at [Franck Lab](https://www.franck.engr.wisc.edu/).

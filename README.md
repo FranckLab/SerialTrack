@@ -44,7 +44,15 @@ Images should have segment-able and localizable particles: limited or no particl
 ## Cite
 If used please cite:
 [1] Jin Yang, Yue Yin, Alexander K. Landauer, Selda Buyuktozturk, Jing Zhang, Luke Summey, Alexander McGhee, Matt K. Fu, John O. Dabiri, Christian Franck. SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking. (2022) https://doi.org/10.48550/arXiv.2203.12573
- 
+
+@misc{yang2022serialtrack,
+  doi = {10.48550/ARXIV.2203.12573},
+  url = {https://arxiv.org/abs/2203.12573},
+  author = {Yang, Jin and Yin, Yue and Landauer, Alexander K. and Buyuktozturk, Selda and Zhang, Jing and Summey, Luke and McGhee, Alexander and Fu, Matt K. and Dabiri, John O. and Franck, Christian},
+  title = {SerialTrack: ScalE and Rotation Invariant Augmented Lagrangian Particle Tracking},
+  publisher = {arXiv},
+  year = {2022}
+}
  
 ## Contact and support
 For questions, please first refer to [FAQ](https://github.com/FranckLab/SerialTrack#faq) and [Questions/Issues](https://github.com/FranckLab/SerialTrack/issues). Add a new question if similar issue hasn't been reported. The author's contact information can be found at [Franck Lab](https://www.franck.engr.wisc.edu/).
